@@ -1,0 +1,21 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "API Gateway", "API Gateway", "{11F6211F-B58F-454B-BDD5-0C6E42F90ECB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Yarp API Gateway", "Yarp API Gateway\Yarp API Gateway.csproj", "{368BA549-AE47-41F3-B988-E86B8CC1FA60}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{368BA549-AE47-41F3-B988-E86B8CC1FA60}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{368BA549-AE47-41F3-B988-E86B8CC1FA60}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{368BA549-AE47-41F3-B988-E86B8CC1FA60}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{368BA549-AE47-41F3-B988-E86B8CC1FA60}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{368BA549-AE47-41F3-B988-E86B8CC1FA60} = {11F6211F-B58F-454B-BDD5-0C6E42F90ECB}
+	EndGlobalSection
+EndGlobal
