@@ -4,6 +4,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "API Gateway", "API Gateway"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Yarp API Gateway", "Yarp API Gateway\Yarp API Gateway.csproj", "{368BA549-AE47-41F3-B988-E86B8CC1FA60}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AuthService", "AuthService", "{1240F3AC-45D4-4E82-93FA-8C474063FDA9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthService.API", "AuthService.API\AuthService.API.csproj", "{B003794E-BAD6-4AA3-BB51-E358E7EDC197}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -14,8 +18,13 @@ Global
 		{368BA549-AE47-41F3-B988-E86B8CC1FA60}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{368BA549-AE47-41F3-B988-E86B8CC1FA60}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{368BA549-AE47-41F3-B988-E86B8CC1FA60}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B003794E-BAD6-4AA3-BB51-E358E7EDC197}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B003794E-BAD6-4AA3-BB51-E358E7EDC197}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B003794E-BAD6-4AA3-BB51-E358E7EDC197}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B003794E-BAD6-4AA3-BB51-E358E7EDC197}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{368BA549-AE47-41F3-B988-E86B8CC1FA60} = {11F6211F-B58F-454B-BDD5-0C6E42F90ECB}
+		{B003794E-BAD6-4AA3-BB51-E358E7EDC197} = {1240F3AC-45D4-4E82-93FA-8C474063FDA9}
 	EndGlobalSection
 EndGlobal
