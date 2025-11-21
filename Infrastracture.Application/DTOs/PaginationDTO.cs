@@ -1,6 +1,6 @@
-namespace Infrastracture.Domain.Entities;
+namespace Infrastracture.Application.DTOs;
 
-public class Pagination
+public class PaginationDTO
 {
     public int pageIndex { get; set; }
     public int totalRecords { get; set; }

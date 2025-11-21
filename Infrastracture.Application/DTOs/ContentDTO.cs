@@ -1,6 +1,6 @@
-namespace Infrastracture.Domain.Entities;
+namespace Infrastracture.Application.DTOs;
 
-public class PerformerInfo
+public class ContentDTO
 {
     public Guid id { get; set; }
     public string name { get; set; }

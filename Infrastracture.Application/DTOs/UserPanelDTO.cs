@@ -1,6 +1,6 @@
-namespace Infrastracture.Domain.Entities;
+namespace Infrastracture.Application.DTOs;
 
-public class UserPanel: BaseEntity
+public class UserPanelDTO
 {
     public Guid id { get; set; }
     public string name { get; set; }

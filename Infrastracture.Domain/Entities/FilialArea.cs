@@ -1,9 +1,8 @@
 namespace Infrastracture.Domain.Entities;
 
-public class Region: BaseEntity
+public class FilialArea: BaseEntity
 {
     public int id { get; set; }
     public string name { get; set; }
-    public int filialId { get; set; }
-    public Guid adminId { get; set; }
+    public Guid analiticId { get; set; }
 }

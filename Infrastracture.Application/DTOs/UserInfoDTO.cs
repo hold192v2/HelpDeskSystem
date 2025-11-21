@@ -1,10 +1,10 @@
-namespace Infrastracture.Domain.Entities;
+namespace Infrastracture.Application.DTOs;
 
-public class UserInfo: BaseEntity
+public class UserInfoDTO
 {
     public string name { get; set; }
     public string surname { get; set; }
-    public string patronymic { get; set; }
+    public string patrinymic { get; set; }
     public string rolename { get; set; }
     public string email { get; set; }
     public List<string> category { get; set; }
