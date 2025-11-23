@@ -2,16 +2,17 @@ namespace Infrastracture.Domain.Entities;
 
 public class User: BaseEntity
 {
-    public Guid id { get; set; }
-    public string name { get; set; }
-    public string surname { get; set; }
-    public string patronymic { get; set; }
-    public string email { get; set; }
-    public string avatar { get; set; }
-    public int roleId { get; set; }
-    public int categoryId { get; set; }
-    public Guid officeId { get; set; }
-    public int regionId { get; set; }
-    public double rating { get; set; }
-    public string systemId { get; set; }
+    public Guid Id { get; set; }
+    public string Name { get; set; }
+    public string Surname { get; set; }
+    public string Fullname { get; set; }
+    public string Patronymic { get; set; }
+    public string Email { get; set; }
+    public string Avatar { get; set; }
+    public int RoleId { get; set; }
+    public int CategoryId { get; set; }
+    public Guid OfficeId { get; set; }
+    public int RegionId { get; set; }
+    public double Rating { get; set; }
+    public string SystemId { get; set; }
 }

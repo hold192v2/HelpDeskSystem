@@ -18,14 +18,3 @@ public class AppDbContext: DbContext
     public DbSet<Region> Regions { get; set; }
     public DbSet<FilialArea> FilialAreas { get; set; }
 }
-
-public class AppDbContextDesignFactory : IDesignTimeDbContextFactory<AppDbContext>
-{
-    public AppDbContext CreateDbContext(string[] args)
-    {
-        var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
-        optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=TariffSerice;Username=postgres;Password=second");
-
-        return new AppDbContext(optionsBuilder.Options);
-    }
-}

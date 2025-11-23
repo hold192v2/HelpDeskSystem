@@ -2,10 +2,10 @@ namespace Infrastracture.Application.DTOs;
 
 public class UserPanelDTO
 {
-    public Guid id { get; set; }
-    public string name { get; set; }
-    public string surname { get; set; }
-    public string patronymic { get; set; }
-    public string rolename { get; set; }
-    public string avatar { get; set; }
+    public Guid Id { get; set; }
+    public string Name { get; set; }
+    public string Surname { get; set; }
+    public string Patronymic { get; set; }
+    public string Rolename { get; set; }
+    public string Avatar { get; set; }
 }

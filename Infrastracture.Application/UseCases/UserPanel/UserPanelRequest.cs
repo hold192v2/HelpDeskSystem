@@ -3,4 +3,4 @@ using MediatR;
 
 namespace Infrastracture.Application.UseCases.UserPanel;
 
-public record UserPanelRequest(Guid userId, bool panel): IRequest<Response>;
+public record UserPanelRequest(Guid UserId, bool Panel): IRequest<Response>;

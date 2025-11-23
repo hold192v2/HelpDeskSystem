@@ -2,10 +2,10 @@ namespace Infrastracture.Application.DTOs;
 
 public class ContentDTO
 {
-    public Guid id { get; set; }
-    public string name { get; set; }
-    public string surname { get; set; }
-    public string patronymic { get; set; }
-    public List<string> category { get; set; }
-    public List<string> office { get; set; }
+    public Guid Id { get; set; }
+    public string Name { get; set; }
+    public string Surname { get; set; }
+    public string Patronymic { get; set; }
+    public List<string> Category { get; set; }
+    public List<string> Office { get; set; }
 }
