@@ -21,23 +21,23 @@ public class UserInfoHandler: IRequestHandler<UserInfoRequest, Response>
     public async Task<Response> Handle(UserInfoRequest request, CancellationToken cancellationToken)
     {
         var trueRole = new List<string> { "employee", "performer" };
-        var user = _user.GetUserByUserId(request.UserId);
-        var role = _role.GetRoleNameByUser(user.Result);
-        if (!trueRole.Contains(role.Result.Name))
+        var user = await _user.GetUserByUserId(request.UserId);
+        var role = await _role.GetRoleNameByUser(user);
+        if (!trueRole.Contains(role.Name))
             return new Response("", 404);
-        var office = _office.GetOfficeById(user.Result.OfficeId);
+        var office = await _office.GetOfficeById(user.OfficeId);
         
         var userInfo = new UserInfoDTO();
-        userInfo.Name = user.Result.Name;
-        userInfo.Surname = user.Result.Surname;
-        userInfo.Rolename = role.Result.Name;
-        userInfo.Email = user.Result.Email;
+        userInfo.Name = user.Name;
+        userInfo.Surname = user.Surname;
+        userInfo.Rolename = role.Name;
+        userInfo.Email = user.Email;
         userInfo.Category = new List<string> {"1", "2", "3"};
-        userInfo.Rating = user.Result.Rating;
-        userInfo.Office = new List<string> { office.Result.City, office.Result.Address };
-        userInfo.RegionId = user.Result.RegionId;
-        userInfo.SystemId = user.Result.SystemId;
-        userInfo.Avatar = user.Result.Avatar;
+        userInfo.Rating = user.Rating;
+        userInfo.Office = new List<string> { office.City, office.Address };
+        userInfo.RegionId = user.RegionId;
+        userInfo.SystemId = user.SystemId;
+        userInfo.Avatar = user.Avatar;
         
         return new Response("UserInfo", 200, userInfo);
     }

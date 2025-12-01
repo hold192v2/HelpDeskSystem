@@ -1,3 +1,6 @@
+using Infrastracture.Application.Configuration;
+using Infrastracture.Infrastracture;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -5,7 +8,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddOpenApi();
 
 builder.Services.AddControllers();
-
+builder.Services.AddSwaggerGen();
+builder.Services.ConfigurePresistanceApp(builder.Configuration);
+builder.Services.ConfigureApplicationApp();
 var app = builder.Build();
 
 app.MapControllers();
