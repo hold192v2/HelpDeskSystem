@@ -4,7 +4,7 @@ public class UserInfoDTO
 {
     public string Name { get; set; }
     public string Surname { get; set; }
-    public string Patrinymic { get; set; }
+    public string Patronymic { get; set; }
     public string Rolename { get; set; }
     public string Email { get; set; }
     public List<string> Category { get; set; }

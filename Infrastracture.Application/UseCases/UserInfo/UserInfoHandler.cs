@@ -11,11 +11,13 @@ public class UserInfoHandler: IRequestHandler<UserInfoRequest, Response>
     private readonly IUser _user;
     private readonly IRole _role;
     private readonly IOffice _office;
-    public UserInfoHandler(IUser user, IRole role, IOffice office) 
+    private readonly IMapper _mapper;
+    public UserInfoHandler(IUser user, IRole role, IOffice office, IMapper mapper) 
     {
         _user = user;
         _role = role;
         _office = office;
+        _mapper = mapper;
     }
     
     public async Task<Response> Handle(UserInfoRequest request, CancellationToken cancellationToken)
@@ -27,17 +29,10 @@ public class UserInfoHandler: IRequestHandler<UserInfoRequest, Response>
             return new Response("", 404);
         var office = await _office.GetOfficeById(user.OfficeId);
         
-        var userInfo = new UserInfoDTO();
-        userInfo.Name = user.Name;
-        userInfo.Surname = user.Surname;
+        var userInfo = _mapper.Map(user, new  UserInfoDTO());
         userInfo.Rolename = role.Name;
-        userInfo.Email = user.Email;
         userInfo.Category = new List<string> {"1", "2", "3"};
-        userInfo.Rating = user.Rating;
-        userInfo.Office = new List<string> { office.City, office.Address };
-        userInfo.RegionId = user.RegionId;
-        userInfo.SystemId = user.SystemId;
-        userInfo.Avatar = user.Avatar;
+        userInfo.Office = new List<string> { $"{office.City}, {office.Address}"};
         
         return new Response("UserInfo", 200, userInfo);
     }

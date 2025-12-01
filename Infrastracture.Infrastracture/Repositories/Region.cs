@@ -15,7 +15,7 @@ public class Region: BaseRepository<Domain.Entities.Region>, IRegion
 
     public async Task<List<Domain.Entities.Region>> GetAllRegions()
     {
-        return _context.Set<Domain.Entities.Region>().ToList();
+        return  _context.Set<Domain.Entities.Region>().ToList();
     }
 
     public async Task<int> GetRegionIdByFilialId(int filialId)
