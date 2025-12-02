@@ -1,6 +1,8 @@
 using System.Security.Claims;
+using DTOs;
 using Keycloak.AuthServices.Authentication;
 using Keycloak.AuthServices.Authorization;
+using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
@@ -8,19 +10,9 @@ using Microsoft.OpenApi.Models;
 
 
 var builder = WebApplication.CreateBuilder(args);
-// Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 builder.Services.AddControllers();
-/*builder.Services.AddKeycloakWebApiAuthentication(
-    builder.Configuration,
-    (options) =>
-    {
-        options.RequireHttpsMetadata = false;
-        options.Audience = "test-client";
-    }
-);
-*/
+
 builder.Services
     .AddAuthorization()
     .AddKeycloakAuthorization()
@@ -77,6 +69,17 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidIssuer = builder.Configuration["Authentication:ValidIssuer"]
         };
     });
+
+builder.Services.AddMassTransit(x =>
+{
+    x.AddRequestClient<UserCheckAuthRequestDto>();
+
+    x.UsingRabbitMq((context, cfg) =>
+    {
+        cfg.Host("amqps://ryqfbrei:ZzSKvw_5rVinY_QLFwQ3evnA2EJgogn4@kebnekaise.lmq.cloudamqp.com/ryqfbrei");
+        cfg.Message<UserCheckAuthRequestDto>(x => x.SetEntityName("check-auth-govno"));
+    });
+});
 
 builder.Services.AddSwaggerGen(options =>
 {
