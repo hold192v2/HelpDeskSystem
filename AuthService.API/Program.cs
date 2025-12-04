@@ -12,6 +12,17 @@ using Microsoft.OpenApi.Models;
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddOpenApi();
 builder.Services.AddControllers();
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowProxy", policy =>
+    {
+        policy.WithOrigins("http://localhost:5299") 
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials();
+    });
+});
+
 
 builder.Services
     .AddAuthorization()
@@ -61,13 +72,19 @@ builder.Services
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(o =>
     {
-        o.RequireHttpsMetadata = false;
+        o.RequireHttpsMetadata = true;
         o.Audience = builder.Configuration["Authentication:Audience"];
         o.MetadataAddress = builder.Configuration["Authentication:MetadataAddress"]!;
         o.TokenValidationParameters = new TokenValidationParameters
         {
             ValidIssuer = builder.Configuration["Authentication:ValidIssuer"]
         };
+        
+        o.BackchannelHttpHandler = new HttpClientHandler
+        {
+            ServerCertificateCustomValidationCallback =
+                HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+        }; //при деплое необходимо убрать, т.к. этот параметр позволяет игнорировать, что SSL сертификат игнорируется
     });
 
 builder.Services.AddMassTransit(x =>
@@ -77,28 +94,30 @@ builder.Services.AddMassTransit(x =>
     x.UsingRabbitMq((context, cfg) =>
     {
         cfg.Host("amqps://ryqfbrei:ZzSKvw_5rVinY_QLFwQ3evnA2EJgogn4@kebnekaise.lmq.cloudamqp.com/ryqfbrei");
-        cfg.Message<UserCheckAuthRequestDto>(x => x.SetEntityName("check-auth-govno"));
+        cfg.Message<UserCheckAuthRequestDto>(x => x.SetEntityName("check-auth-queue"));
     });
 });
 
 builder.Services.AddSwaggerGen(options =>
 {
-    options.SwaggerDoc("v1", new OpenApiInfo { Title = "Demo API", Version = "v1" });
+    options.SwaggerDoc("v1", new OpenApiInfo { Title = "AuthService", Version = "v1" });
     options.CustomSchemaIds(id => id.FullName!.Replace('+', '-'));
     options.AddSecurityDefinition("Keycloak", new OpenApiSecurityScheme
     {
         Type = SecuritySchemeType.OAuth2,
         Flows = new OpenApiOAuthFlows
         {
-            Implicit = new OpenApiOAuthFlow
+            AuthorizationCode = new OpenApiOAuthFlow
             {
                 AuthorizationUrl = new Uri(builder.Configuration["Keycloak:AuthorizationUrl"]!),
+                TokenUrl = new Uri(builder.Configuration["Keycloak:TokenUrl"]!),
                 Scopes = new Dictionary<string, string>
                 {
                     { "openid", "openid" },
                     { "profile", "profile" }
                 }
             }
+
         }
     });
     options.AddSecurityRequirement(new OpenApiSecurityRequirement
@@ -129,9 +148,14 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI(c =>
     {
+        c.OAuthClientId("apiGateway-helpdesk");
+        c.OAuthClientSecret("9ttscO6oNh8ZUbYZXx5cUURkINcb3kIP");
+        c.OAuthUsePkce();
+        c.OAuthScopeSeparator(" ");
         c.SwaggerEndpoint("/swagger/v1/swagger.yaml", "v1");
     });
 }
+app.UseCors("AllowProxy");
 app.MapControllers();
 
 app.UseAuthentication();

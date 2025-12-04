@@ -21,25 +21,17 @@ public class AuthController : ControllerBase
     [HttpGet("me")]
     public async Task<ActionResult> AuthCheck()
     {
+        var claims = User.Claims
+            .GroupBy(c => c.Type)
+            .ToDictionary(g => g.Key, g => g.First().Value);
+        var userId = new Guid(claims.GetValueOrDefault("user-id")!);
         var isExisting = await _client.GetResponse<UserCheckAuthDto>
-        (new UserCheckAuthRequestDto {UserId = new Guid("c1e549ad-4e0a-44d6-bc2f-d114206fc333")});
-        
+        (new UserCheckAuthRequestDto {UserId = userId});
         if (isExisting.Message.IsExist)
         {
-            var realmAccessClaim = User.Claims.FirstOrDefault(c => c.Type == "realm_access")?.Value;
-            var claims = User.Claims.ToDictionary(c => c.Type, c => c.Value);
-            var name = claims.GetValueOrDefault("name");
-            var id = new Guid(claims.GetValueOrDefault("name"));
-            var realmAccess = JsonDocument.Parse(realmAccessClaim);
-            var roles = realmAccess.RootElement
-                .GetProperty("roles")
-                .EnumerateArray()
-                .Select(r => r.GetString())
-                .ToList();
             return Ok(new
             {
-                Name = name,
-                Roles = roles
+                isExisting.Message
             });
         }
         return StatusCode(203, "Пользователь не создан, необходимо указать офис");
