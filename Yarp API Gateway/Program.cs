@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,6 +18,36 @@ builder.Services.AddCors(options =>
             .AllowCredentials();
     });
 });
+builder.Services.AddMemoryCache();
+builder.Services.AddHttpClient("AllowAnyCert")
+    .ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
+    {
+        ServerCertificateCustomValidationCallback = 
+            HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+    });
+
+builder.Services.AddAuthentication(options =>
+    {
+        options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+        options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
+
+    })
+    .AddCookie()
+    .AddOpenIdConnect(options =>
+    {
+        options.Authority = builder.Configuration["Authentication:ValidIssuer"];
+        options.ClientId = builder.Configuration["Keycloak:ClientId"];
+        options.ClientSecret = builder.Configuration["Keycloak:ClientSecret"];
+        options.ResponseType = "code";
+
+        options.SaveTokens = true; 
+        options.BackchannelHttpHandler = new HttpClientHandler
+        {
+            ServerCertificateCustomValidationCallback =
+                HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+        }; // при деплое необходимо будет вырезать, т.к. здесь происходит игнорирование самодписанного SSL.
+    });
+
 builder.Services.AddControllers();
 builder.Services
     .AddReverseProxy()
@@ -25,42 +57,6 @@ builder.Services.AddSwaggerGen(options =>
 {
     options.SwaggerDoc("v1", new OpenApiInfo { Title = "AuthService", Version = "v1" });
     options.CustomSchemaIds(id => id.FullName!.Replace('+', '-'));
-    options.AddSecurityDefinition("Keycloak", new OpenApiSecurityScheme
-    {
-        Type = SecuritySchemeType.OAuth2,
-        Flows = new OpenApiOAuthFlows
-        {
-            AuthorizationCode = new OpenApiOAuthFlow
-            {
-                AuthorizationUrl = new Uri(builder.Configuration["Keycloak:AuthorizationUrl"]!),
-                TokenUrl = new Uri(builder.Configuration["Keycloak:TokenUrl"]!),
-                Scopes = new Dictionary<string, string>
-                {
-                    { "openid", "openid" },
-                    { "profile", "profile" }
-                }
-            }
-
-        }
-    });
-    options.AddSecurityRequirement(new OpenApiSecurityRequirement
-    {
-        {
-            new OpenApiSecurityScheme
-            {
-                Reference = new OpenApiReference
-                {
-                    Id = "Keycloak",
-                    Type = ReferenceType.SecurityScheme
-                },
-                In = ParameterLocation.Header,
-                Name = "Bearer",
-                Scheme = "Bearer"
-            },
-            []
-        }
-    });
-    options.CustomSchemaIds(type => type.ToString());
 });
 
 var app = builder.Build();
@@ -74,12 +70,12 @@ app.UseCors("AllowFrontend");
 app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
-    c.OAuthClientId("apiGateway-helpdesk");
     c.OAuthUsePkce();
-    c.OAuthScopeSeparator(" ");
     c.SwaggerEndpoint("/swagger/v1/swagger.yaml", "v1");
 });
 //app.UseHttpsRedirection();
+app.UseAuthentication()
+    .UseAuthorization();
 app.MapControllers();
 app.MapReverseProxy();
 app.Run();
