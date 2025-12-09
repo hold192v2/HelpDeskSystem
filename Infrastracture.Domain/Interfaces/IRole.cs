@@ -4,5 +4,5 @@ namespace Infrastracture.Domain.Interfaces;
 
 public interface IRole: IBaseOperationRepository<Role>
 {
-    Task<Role> GetRoleNameByUser(User user);
+    Task<Role> GetRoleByUser(User user);
 }

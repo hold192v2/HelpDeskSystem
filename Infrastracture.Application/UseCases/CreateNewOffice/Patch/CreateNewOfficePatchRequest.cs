@@ -3,4 +3,4 @@ using MediatR;
 
 namespace Infrastracture.Application.UseCases.CreateNewOffice.Patch;
 
-public record CreateNewOfficePatchRequest(string OfficeId, string City, string Address): IRequest<Response>;
+public record CreateNewOfficePatchRequest(Guid OfficeId, string City, string Address): IRequest<Response>;

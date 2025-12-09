@@ -14,11 +14,11 @@ public static class ServiceExtentions
         var connectionString = configuration.GetConnectionString("postgres");
         IServiceCollection serviceCollection = services.AddDbContext<AppDbContext>(opt => opt.UseNpgsql(connectionString, x => x.MigrationsAssembly("Infrastructure.Infrastructure")), ServiceLifetime.Scoped);
         
-        serviceCollection.AddScoped<IFilialArea, FilialArea>();
-        serviceCollection.AddScoped<IOffice, Office>();
-        serviceCollection.AddScoped<IRegion, Region>();
-        serviceCollection.AddScoped<IRole, Role>();
-        serviceCollection.AddScoped<IUser, User>();
+        serviceCollection.AddScoped<IFilialArea, FilialAreaRepository>();
+        serviceCollection.AddScoped<IOffice, OfficeRepository>();
+        serviceCollection.AddScoped<IRegion, RegionRepository>();
+        serviceCollection.AddScoped<IRole, RoleRepository>();
+        serviceCollection.AddScoped<IUser, UserRepository>();
 
 
     }

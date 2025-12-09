@@ -3,11 +3,11 @@ using Infrastracture.Infrastracture.Context;
 
 namespace Infrastracture.Infrastracture.Repositories;
 
-public class Office: BaseRepository<Domain.Entities.Office>, IOffice
+public class OfficeRepository: BaseRepository<Domain.Entities.Office>, IOffice
 {
     private readonly AppDbContext _context;
     
-    public Office(AppDbContext appDbContext) : base(appDbContext)
+    public OfficeRepository(AppDbContext appDbContext) : base(appDbContext)
     {
         _context = appDbContext;
     }
