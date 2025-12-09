@@ -1,6 +1,9 @@
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.OpenApi.Models;
+using StackExchange.Redis;
+using Yarp_API_Gateway.Extentions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,7 +21,8 @@ builder.Services.AddCors(options =>
             .AllowCredentials();
     });
 });
-builder.Services.AddMemoryCache();
+
+
 builder.Services.AddHttpClient("AllowAnyCert")
     .ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
     {
@@ -35,11 +39,11 @@ builder.Services.AddAuthentication(options =>
     .AddCookie()
     .AddOpenIdConnect(options =>
     {
+        options.RequireHttpsMetadata = true;
         options.Authority = builder.Configuration["Authentication:ValidIssuer"];
         options.ClientId = builder.Configuration["Keycloak:ClientId"];
         options.ClientSecret = builder.Configuration["Keycloak:ClientSecret"];
         options.ResponseType = "code";
-
         options.SaveTokens = true; 
         options.BackchannelHttpHandler = new HttpClientHandler
         {

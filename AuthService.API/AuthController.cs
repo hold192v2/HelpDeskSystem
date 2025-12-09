@@ -38,7 +38,11 @@ public class AuthController : ControllerBase
             
     }
     
-    
+    [HttpGet("govno")]
+    public async Task<ActionResult> AuthCGovno()
+    {
+        return Ok();
+    }
     
     
     
