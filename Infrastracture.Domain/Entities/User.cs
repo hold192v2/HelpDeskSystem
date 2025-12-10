@@ -9,8 +9,8 @@ public class User: BaseEntity
     public string Email { get; set; }
     public string Avatar { get; set; }
     public int RoleId { get; set; }
-    public int CategoryId { get; set; }
+    public int? CategoryId { get; set; }
     public int RegionId { get; set; }
-    public double Rating { get; set; }
+    public double? Rating { get; set; }
     public string SystemId { get; set; }
 }

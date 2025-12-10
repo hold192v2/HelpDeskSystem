@@ -1,6 +1,7 @@
 using AutoMapper;
 using Infrastracture.Application.HandlerResponse;
 using Infrastracture.Application.UseCases.CreateNewOffice.Post;
+using Infrastracture.Domain.Entities;
 using Infrastracture.Domain.Interfaces;
 using MediatR;
 

@@ -21,7 +21,14 @@ public class RegionsHandler: IRequestHandler<RegionsRequest, Response>
     {
         var regions = _region.GetAll();
         var result = new List<RegionDTO>();
-        result = regions.Select(r => _mapper.Map(r, new RegionDTO())).ToList();
+        foreach (var region in regions)
+        {
+            var regionDTO = new RegionDTO();
+            regionDTO.Name = region.Name;
+            regionDTO.RegionId = region.Id;
+            result.Add(regionDTO);
+        }
+        // result = regions.Select(r => _mapper.Map(r, new RegionDTO())).ToList();
         return new Response("Regions", 200, result);
     }
 }

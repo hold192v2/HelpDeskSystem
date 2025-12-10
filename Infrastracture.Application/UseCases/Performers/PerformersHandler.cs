@@ -36,26 +36,31 @@ public class PerformersHandler: IRequestHandler<PerformersRequest, Response>
         
         var regionId = _region.GetRegionIdByUserId((Guid)request.UserId);
         
-        var perforvers = _user.GetUsersByRegionId(await regionId).Result;
+        var performers = _user.GetUsersByRegionId(await regionId).Result.Where(u => _role.GetRoleByUser(u).Result.Name == "performer").ToList();
         if (request.Fullname != null)
-            perforvers = (List<User>)perforvers.Where(p => $"{p.Name} {p.Surname} {p.Patronymic}".Contains(request.Fullname));
+            performers = performers.Where(p => $"{p.Name} {p.Surname} {p.Patronymic}".Contains(request.Fullname)).ToList();
         if (request.OfficeId != null)
         {
             var placeOfWorks = _placeOfWork.GetByOfficeId((Guid)request.OfficeId).Result;
-            perforvers = (List<User>)perforvers.Where(p => _placeOfWork.GetByUserId(p.Id).Result.Any(item => placeOfWorks.Contains(item)));
+            performers = performers.Where(p => _placeOfWork.GetByUserId(p.Id).Result.Any(item => placeOfWorks.Contains(item))).ToList();
         }
             
         
         var paginationDTO = new PaginationDTO();
         paginationDTO.PageIndex = request.Page;
-        paginationDTO.TotalPages = perforvers.Count / 20;
-        paginationDTO.TotalRecords = perforvers.Count;
+        paginationDTO.TotalPages = performers.Count / 20 + 1;
+        paginationDTO.TotalRecords = performers.Count;
 
         var contents = new List<ContentDTO>();
-        foreach (var perforver in perforvers)
+        foreach (var performer in performers)
         {
-            var placeOfWork = _placeOfWork.GetByUserId(perforver.Id).Result;
-            var content = _mapper.Map(perforver, new ContentDTO());
+            var placeOfWork = _placeOfWork.GetByUserId(performer.Id).Result;
+            var content = new ContentDTO();
+            content.Id = performer.Id;
+            content.Name = performer.Name;
+            content.Surname = performer.Surname;
+            content.Patronymic = performer.Patronymic;
+            // var content = _mapper.Map(perforver, new ContentDTO());
             var offices = new List<string>();
             foreach (var e in placeOfWork)
             {
@@ -69,7 +74,10 @@ public class PerformersHandler: IRequestHandler<PerformersRequest, Response>
 
         var result = new PerformersDTO();
         result.Pagination = paginationDTO;
-        result.Content = contents.Slice(20 * (request.Page - 1), 20);
+        var length = 20;
+        if (request.Page * length > performers.Count)
+            length = performers.Count - (request.Page - 1) * length;
+        result.Content = contents.Slice(20 * (request.Page - 1), length);
         return new Response("Performers", 200, result);
     }
 }

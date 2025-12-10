@@ -19,7 +19,6 @@ public static class ServiceExtentions
         serviceCollection.AddScoped<IRegion, RegionRepository>();
         serviceCollection.AddScoped<IRole, RoleRepository>();
         serviceCollection.AddScoped<IUser, UserRepository>();
-
-
+        serviceCollection.AddScoped<IPlaceOfWork, PlaceOfWorkRepository>();
     }
 }

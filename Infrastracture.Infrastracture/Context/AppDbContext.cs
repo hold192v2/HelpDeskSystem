@@ -18,16 +18,15 @@ public class AppDbContext: DbContext
     public DbSet<Region> Regions { get; set; }
     public DbSet<FilialArea> FilialAreas { get; set; }
     public DbSet<PlaceOfWork> PlaceOfWork { get; set; }
+}
 
-    public class YourDbContextFactory : IDesignTimeDbContextFactory<AppDbContext>
+public class YourDbContextFactory : IDesignTimeDbContextFactory<AppDbContext>
+{
+    public AppDbContext CreateDbContext(string[] args)
     {
-        public AppDbContext CreateDbContext(string[] args)
-        {
-            var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
-            optionsBuilder.UseNpgsql(
-                "Host=localhost;Port=5432;Database=helpdesk_service;Username=postgres;Password=second"); //переделать
+        var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
+        optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=testDB;Username=postgres;Password=224321");
 
-            return new AppDbContext(optionsBuilder.Options);
-        }
+        return new AppDbContext(optionsBuilder.Options);
     }
 }

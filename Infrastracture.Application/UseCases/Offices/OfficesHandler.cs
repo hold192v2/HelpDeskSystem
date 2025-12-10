@@ -26,14 +26,22 @@ public class OfficesHandler: IRequestHandler<OfficesRequest, Response>
         if (request.RegioId != null)
             regions.Add(_region.GetRegionByRegionId((int)request.RegioId).Result);
         else
-            if (request.FillialId != null)
-                regions = _region.GetRegionsByFilialId((int)request.FillialId).Result;
+        if (request.FillialId != null)
+            regions = _region.GetRegionsByFilialId((int)request.FillialId).Result;
         
         var officesResult = new List<OfficeDTO>();
         foreach (var region in regions)
         {
             var offices = _office.GetOfficesByRegionId(region.Id).Result;
-            officesResult.AddRange(offices.Select(office => _mapper.Map(office, new OfficeDTO())));
+            // officesResult.AddRange(offices.Select(office => _mapper.Map(office, new OfficeDTO())));
+            foreach (var o in offices)
+            {
+                var office = new OfficeDTO();
+                office.City = o.City;
+                office.Address = o.Address;
+                office.RegionId = o.RegionId;
+                officesResult.Add(office);
+            }
         }
         return new Response("Offices", 200, officesResult);
     }

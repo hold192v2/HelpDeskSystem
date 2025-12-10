@@ -24,10 +24,18 @@ public class SearchUserHandler: IRequestHandler<SearchUserRequest, Response>
     {
         var user = _user.GetUserByUserId((Guid)request.UserId).Result;
         var role = _role.GetRoleByUser(user).Result;
-        var users = _user.GetAll().Where(u => $"{u.Name} {u.Surname} {u.Patronymic}".Contains(request.Fullname)).ToList();
+        var users = _user.GetUsersByFullname(request.Fullname).Result;
         if (role.Name == "admin")
             users = users.Where(u => _role.GetRoleByUser(u).Result.Name == "performer").ToList();
-        var result = users.Select(u => _mapper.Map(u, new UserDTO())).ToList();
+        // var result = users.Select(u => _mapper.Map(u, new UserDTO())).ToList();
+        var result = new List<UserDTO>();
+        foreach (var u in users)
+        {
+            var userDTO = new UserDTO();
+            userDTO.UserId = u.Id;
+            userDTO.Fullname = $"{u.Name} {u.Surname} {u.Patronymic}";
+            result.Add(userDTO);
+        }
         return new Response("Users", 200, result);
     }
 }

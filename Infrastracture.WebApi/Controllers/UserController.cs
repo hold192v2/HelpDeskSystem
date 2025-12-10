@@ -49,7 +49,7 @@ public class UserController: ControllerBase
     public async Task<IActionResult> CreateNewOfficePost([FromBody] CreateNewOfficePostRequest request, [FromHeader(Name = "X-User-Id")] Guid userId)
     {
         var trueRole = new List<string> { "admin", "superadmin" };
-        if (TrueRole(userId, trueRole))
+        if (!TrueRole(userId, trueRole))
             return BadRequest();
         var response = await _mediator.Send(request);
         if (response is null)
@@ -61,7 +61,7 @@ public class UserController: ControllerBase
     public async Task<IActionResult> CreateNewOfficePatch([FromBody] CreateNewOfficePatchRequest request, [FromHeader(Name = "X-User-Id")] Guid userId)
     {
         var trueRole = new List<string> { "admin", "superadmin" };
-        if (TrueRole(userId, trueRole))
+        if (!TrueRole(userId, trueRole))
             return BadRequest();
         var response = await _mediator.Send(request);
         if (response is null)
@@ -80,8 +80,8 @@ public class UserController: ControllerBase
     [HttpGet("offices")]
     public async Task<IActionResult> GetOffices([FromQuery] OfficesRequest query, [FromHeader(Name = "X-User-Id")] Guid userId)
     {
-        var trueRole = new List<string> { "employee", "admin", "analitic","superadmin" };
-        if (TrueRole(userId, trueRole))
+        var trueRole = new List<string> { "employee", "admin", "analyst","superadmin" };
+        if (!TrueRole(userId, trueRole))
             return BadRequest();
         var response = await _mediator.Send(query);
         return Ok(response.Offices);
@@ -91,7 +91,7 @@ public class UserController: ControllerBase
     public async Task<IActionResult> GetUsers([FromQuery] SearchUserRequest query, [FromHeader(Name = "X-User-Id")] Guid userId)
     {
         var trueRole = new List<string> { "admin", "superadmin" };
-        if (TrueRole(userId, trueRole))
+        if (!TrueRole(userId, trueRole))
             return BadRequest();
         query = query with { UserId = userId };
         var response = await _mediator.Send(query);
@@ -126,8 +126,8 @@ public class UserController: ControllerBase
 
     private bool TrueRole(Guid userId, List<string> trueRoles)
     {
-        var user = _user.GetUserByUserId(userId);
-        var role = _role.GetRoleByUser(user.Result);
-        return trueRoles.Contains(role.Result.Name);
+        var user = _user.GetUserByUserId(userId).Result;
+        var role = _role.GetRoleByUser(user).Result;
+        return trueRoles.Contains(role.Name);
     }
 }
