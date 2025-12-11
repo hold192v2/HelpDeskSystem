@@ -1,5 +1,8 @@
+using DTOs;
 using Infrastracture.Application.Configuration;
+using Infrastracture.Application.DTOs;
 using Infrastracture.Infrastracture;
+using MassTransit;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +14,24 @@ builder.Services.AddControllers();
 builder.Services.AddSwaggerGen();
 builder.Services.ConfigurePresistanceApp(builder.Configuration);
 builder.Services.ConfigureApplicationApp();
+
+builder.Services.AddMassTransit(x =>
+{
+    x.AddConsumer<AuthCheckConsumer>();
+
+    x.UsingRabbitMq((context, cfg) =>
+    {
+        cfg.Host("amqps://ryqfbrei:ZzSKvw_5rVinY_QLFwQ3evnA2EJgogn4@kebnekaise.lmq.cloudamqp.com/ryqfbrei");
+        cfg.ReceiveEndpoint("check-auth-queue", x =>
+        {
+            x.ConfigureConsumer<AuthCheckConsumer>(context);
+            x.Bind("exchange-name");
+        });
+
+    });
+
+});
+
 var app = builder.Build();
 
 app.MapControllers();

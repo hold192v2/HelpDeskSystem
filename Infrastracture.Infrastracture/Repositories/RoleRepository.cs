@@ -17,4 +17,9 @@ public class RoleRepository: BaseRepository<Role>, IRole
     {
         return _context.Roles.FirstOrDefault(x => x.Id == user.RoleId);
     }
+    public Task<string> GetRoleNameById(int id)
+    {
+        var role = _context.Roles.FirstOrDefault(x => x.Id == id);
+        return Task.FromResult(role.Name)!;
+    }
 }
