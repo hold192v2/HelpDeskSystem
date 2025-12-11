@@ -1,20 +1,24 @@
 using System.Security.Claims;
 using System.Text.Json;
+using AuthService.API.Extentions;
 using DTOs;
 using MassTransit;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AuthService.API;
+
 [ApiController]
 [Route("users")]
 public class AuthController : ControllerBase
 {
     private readonly IRequestClient<UserCheckAuthRequestDto> _client;
+    private readonly IConfiguration _config;
 
-    public AuthController(IRequestClient<UserCheckAuthRequestDto> client)
+    public AuthController(IRequestClient<UserCheckAuthRequestDto> client, IConfiguration config)
     {
         _client = client;
+        _config = config;
     }
 
     [Authorize]
@@ -26,34 +30,46 @@ public class AuthController : ControllerBase
             .ToDictionary(g => g.Key, g => g.First().Value);
         var userId = new Guid(claims.GetValueOrDefault("user-id")!);
         var isExisting = await _client.GetResponse<UserCheckAuthDto>
-        (new UserCheckAuthRequestDto {UserId = userId});
+            (new UserCheckAuthRequestDto { UserId = userId });
         if (isExisting.Message.UserId != null)
         {
             return Ok(isExisting.Message);
         }
-        return StatusCode(203, "Пользователь не создан, необходимо указать офис");
-            
+
+        return NoContent();
+
     }
-    
+
     [Authorize]
-    [HttpGet("register")]
-    public async Task<ActionResult> Register()
+    [HttpPost("registration")]
+    public async Task<ActionResult> Register(RegisterDto registerDto)
     {
         var claims = User.Claims
             .GroupBy(c => c.Type)
             .ToDictionary(g => g.Key, g => g.First().Value);
         var userId = new Guid(claims.GetValueOrDefault("user-id")!);
-        var isExisting = await _client.GetResponse<UserCheckAuthDto>
-            (new UserCheckAuthRequestDto {UserId = userId});
-        if (isExisting.Message.UserId != null)
+        var keycloak = new Keycloak.Net.KeycloakClient(
+            _config["Authentication:ValidIssuer"]!,
+            _config["Keycloak:ClientSecret"]!
+        );
+        var user = await keycloak.GetUserAsync("apiGateway-helpdesk", userId.ToString());
+        var patronymic = user.Attributes?["patronymic"]?.FirstOrDefault();
+        var email = user.Attributes?["email"]?.FirstOrDefault();
+        var isSuccessfulRegister = await _client.GetResponse<UserCheckAuthDto>
+        (new RegisterIntoInfrastructureDto(userId, user.FirstName, user.LastName, patronymic,
+            email, 1, registerDto.OfficeId, registerDto.RegionId, await SystemIdGenerator.GetSystemIdAsync()));
+        if (isSuccessfulRegister.Message.UserId != null)
         {
-            return Ok(isExisting.Message);
+            return Ok(isSuccessfulRegister.Message);
         }
-        return StatusCode(203, "Пользователь не создан, необходимо указать офис");
-            
+        return NotFound();
     }
-    
-    [Authorize]
+
+
+
+
+
+[Authorize]
     [HttpGet("me2")]
     public IActionResult AuthCheck2()
     {

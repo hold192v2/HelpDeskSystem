@@ -20,7 +20,7 @@ public class SessionDTO
     [JsonPropertyName("id_token")]
     public string IdToken { get; set; } 
     [JsonPropertyName("expires_in")]
-    public long ExpiresAt { get; set; } // Unix timestamp access token
+    public long ExpiresAt { get; set; } 
     
     
 }
