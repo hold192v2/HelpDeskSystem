@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.OpenApi.Models;
 using StackExchange.Redis;
 using Yarp_API_Gateway.Extentions;
+using Yarp.ReverseProxy.Transforms.Builder;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,18 +12,8 @@ var builder = WebApplication.CreateBuilder(args);
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowFrontend", policy =>
-    {
-        policy.WithOrigins("http://localhost:5299") 
-            .AllowAnyHeader()
-            .AllowAnyMethod()
-            .AllowCredentials();
-    });
-});
 
-
+builder.Services.AddSingleton<ITransformProvider, AccessTokenTransformProvider>();
 builder.Services.AddHttpClient("AllowAnyCert")
     .ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
     {
@@ -51,6 +42,7 @@ builder.Services.AddAuthentication(options =>
                 HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
         }; // при деплое необходимо будет вырезать, т.к. здесь происходит игнорирование самодписанного SSL.
     });
+builder.Services.AddAuthorization();
 
 builder.Services.AddControllers();
 builder.Services
@@ -70,7 +62,6 @@ if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
-app.UseCors("AllowFrontend");
 app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
@@ -81,5 +72,6 @@ app.UseSwaggerUI(c =>
 app.UseAuthentication()
     .UseAuthorization();
 app.MapControllers();
-app.MapReverseProxy();
+app.MapReverseProxy()
+   .RequireAuthorization();
 app.Run();

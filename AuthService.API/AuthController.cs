@@ -27,24 +27,31 @@ public class AuthController : ControllerBase
         var userId = new Guid(claims.GetValueOrDefault("user-id")!);
         var isExisting = await _client.GetResponse<UserCheckAuthDto>
         (new UserCheckAuthRequestDto {UserId = userId});
-        if (isExisting.Message.IsExist)
+        if (isExisting.Message.UserId != null)
         {
-            return Ok(new
-            {
-                isExisting.Message
-            });
+            return Ok(isExisting.Message);
         }
         return StatusCode(203, "Пользователь не создан, необходимо указать офис");
             
     }
     
-    [HttpGet("govno")]
-    public async Task<ActionResult> AuthCGovno()
+    [Authorize]
+    [HttpGet("register")]
+    public async Task<ActionResult> Register()
     {
-        return Ok();
+        var claims = User.Claims
+            .GroupBy(c => c.Type)
+            .ToDictionary(g => g.Key, g => g.First().Value);
+        var userId = new Guid(claims.GetValueOrDefault("user-id")!);
+        var isExisting = await _client.GetResponse<UserCheckAuthDto>
+            (new UserCheckAuthRequestDto {UserId = userId});
+        if (isExisting.Message.UserId != null)
+        {
+            return Ok(isExisting.Message);
+        }
+        return StatusCode(203, "Пользователь не создан, необходимо указать офис");
+            
     }
-    
-    
     
     [Authorize]
     [HttpGet("me2")]

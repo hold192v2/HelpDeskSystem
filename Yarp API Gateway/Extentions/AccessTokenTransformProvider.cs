@@ -15,7 +15,6 @@ public class AccessTokenTransformProvider : ITransformProvider //кейс с п�
     {
         context.AddRequestTransform(async transformContext =>
         {
-            var access = await transformContext.HttpContext.GetTokenAsync("access_token");
             var refresher = new TokenRefresher(
                 transformContext.HttpContext.RequestServices.GetRequiredService<IConfiguration>(),
                 transformContext.HttpContext.RequestServices.GetRequiredService<IHttpClientFactory>());
@@ -27,10 +26,10 @@ public class AccessTokenTransformProvider : ITransformProvider //кейс с п�
                         .UploadIntoMiddlewareAsync())
                         .ExecuteAsync();
             
-            if (!string.IsNullOrEmpty(access))
+            if (!string.IsNullOrEmpty(tokens.AccessToken))
             {
                 transformContext.ProxyRequest.Headers.Authorization =
-                    new AuthenticationHeaderValue("Bearer", access);
+                    new AuthenticationHeaderValue("Bearer", tokens.AccessToken);
             }
         });
     }

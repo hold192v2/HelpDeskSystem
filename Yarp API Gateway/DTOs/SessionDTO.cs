@@ -4,12 +4,12 @@ namespace Yarp_API_Gateway.DTOs;
 
 public class SessionDTO
 {
-    public SessionDTO(string accessToken, string refreshToken, long expiresAt)
+    public SessionDTO(string accessToken, string refreshToken, string idToken, long expiresAt)
     {
         AccessToken = accessToken;
         RefreshToken = refreshToken;
         ExpiresAt = expiresAt;
-        
+        IdToken = idToken;
     }
     
     public string UserId { get; set; }

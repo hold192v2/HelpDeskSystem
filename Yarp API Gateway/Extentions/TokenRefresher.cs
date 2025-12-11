@@ -31,7 +31,7 @@ public class TokenRefresher : ICheckedExpiration, IRefreshToken, IExecuteStage, 
 
     public async Task<IRefreshToken> CheckExpirationAsync()
     {
-        var expiresAt = DateTimeOffset.FromUnixTimeSeconds(long.Parse(await _httpContext.GetTokenAsync("expires_at"))).UtcDateTime;;
+        var expiresAt = DateTimeOffset.FromUnixTimeSeconds(DateTimeOffset.Parse(await _httpContext.GetTokenAsync("expires_at")).ToUnixTimeSeconds()).UtcDateTime;;
         _isExpired = DateTimeOffset.UtcNow > expiresAt;
         return this;
     }
@@ -50,7 +50,7 @@ public class TokenRefresher : ICheckedExpiration, IRefreshToken, IExecuteStage, 
         authResult.Properties.UpdateTokenValue("access_token", _sessionDto.AccessToken);
         authResult.Properties.UpdateTokenValue("refresh_token", _sessionDto.RefreshToken);
         authResult.Properties.UpdateTokenValue("id_token", _sessionDto.IdToken);
-        authResult.Properties.UpdateTokenValue("expires_at", DateTimeOffset.UtcNow.AddSeconds(_sessionDto.ExpiresAt).ToUnixTimeSeconds().ToString());
+        authResult.Properties.UpdateTokenValue("expires_at", DateTimeOffset.UtcNow.AddSeconds(_sessionDto.ExpiresAt).ToString());
         await _httpContext.SignInAsync(authResult.Principal, authResult.Properties);
         return this;
     }
@@ -66,9 +66,10 @@ public class TokenRefresher : ICheckedExpiration, IRefreshToken, IExecuteStage, 
     {
         var accessToken = await _httpContext.GetTokenAsync("access_token");
         var refreshToken = await _httpContext.GetTokenAsync("refresh_token");
+        var idToken = await _httpContext.GetTokenAsync("id_token");
         var expiresAt = (int)(DateTimeOffset.Parse(await _httpContext.GetTokenAsync("expires_at"))
                               - DateTimeOffset.UtcNow).TotalSeconds;
-        return new SessionDTO(accessToken!, refreshToken!, expiresAt);
+        return new SessionDTO(accessToken!, refreshToken!, idToken!, expiresAt);
     }
 
     private async Task<SessionDTO> RefreshTokensAsync()
