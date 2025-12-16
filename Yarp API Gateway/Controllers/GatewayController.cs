@@ -4,7 +4,9 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Caching.Memory;
@@ -23,7 +25,7 @@ public class GatewayController : ControllerBase
     }
     
 
-    [Authorize]
+    [Authorize(AuthenticationSchemes = "oidc")]
     [HttpGet("try")]
     public async Task<IActionResult> GetToken()
     {
@@ -36,6 +38,18 @@ public class GatewayController : ControllerBase
                      .UploadIntoMiddlewareAsync())
                      .ExecuteAsync();
         return Ok(tokens);
+    }
+    
+    [HttpGet("login")]
+    public IActionResult Login([FromQuery] string? returnUrl)
+    {
+        return Challenge(
+            new AuthenticationProperties
+            {
+                RedirectUri = returnUrl ?? "/"
+            },
+            OpenIdConnectDefaults.AuthenticationScheme
+        );
     }
     
 }

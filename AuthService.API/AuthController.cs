@@ -3,13 +3,15 @@ using System.Text.Json;
 using AuthService.API.Extentions;
 using DTOs;
 using MassTransit;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AuthService.API;
 
 [ApiController]
-[Route("users")]
+[Route("auth")]
 public class AuthController : ControllerBase
 {
     private readonly IRequestClient<UserCheckAuthRequestDto> _client;
@@ -20,11 +22,13 @@ public class AuthController : ControllerBase
         _client = client;
         _config = config;
     }
-
+    
     [Authorize]
     [HttpGet("me")]
     public async Task<ActionResult> AuthCheck()
     {
+        if (!User.Identity?.IsAuthenticated ?? true)
+            return Unauthorized(); 
         var claims = User.Claims
             .GroupBy(c => c.Type)
             .ToDictionary(g => g.Key, g => g.First().Value);
@@ -35,7 +39,10 @@ public class AuthController : ControllerBase
         {
             return Ok(isExisting.Message);
         }
-
+        var keycloak = new Keycloak.Net.KeycloakClient(
+            _config["Authentication:ValidIssuer"]!,
+            _config["Keycloak:ClientSecret"]!
+        );
         return NoContent();
 
     }

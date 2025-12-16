@@ -17,47 +17,7 @@ builder.Services.AddControllers();
 builder.Services
     .AddAuthorization()
     .AddKeycloakAuthorization()
-    .AddAuthorizationBuilder()
-    .AddPolicy(
-        "EmployeePolicy",
-        policy =>
-            policy.RequireRealmRoles(
-                "test-client",
-                "employee"
-            )
-    )
-    .AddPolicy(
-        "PerformerPolicy",
-        policy =>
-            policy.RequireRealmRoles(
-                "test-client",
-                "performer"
-            )
-    )
-    .AddPolicy(
-        "AdminPolicy",
-        policy =>
-            policy.RequireRealmRoles(
-                "test-client",
-                "admin"
-            )
-    )
-    .AddPolicy(
-        "AnalystPolicy",
-        policy =>
-            policy.RequireRealmRoles(
-                "test-client",
-                "analyst"
-            )
-    )
-    .AddPolicy(
-        "SuperadminPolicy",
-        policy =>
-            policy.RequireRealmRoles(
-                "test-client",
-                "superadmin"
-            )
-    );
+    .AddAuthorizationBuilder();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(o =>
@@ -88,62 +48,19 @@ builder.Services.AddMassTransit(x =>
     });
 });
 
-builder.Services.AddSwaggerGen(options =>
+builder.Services.AddSwaggerGen(opt =>
 {
-    options.SwaggerDoc("v1", new OpenApiInfo { Title = "AuthService", Version = "v1" });
-    options.CustomSchemaIds(id => id.FullName!.Replace('+', '-'));
-    options.AddSecurityDefinition("Keycloak", new OpenApiSecurityScheme
-    {
-        Type = SecuritySchemeType.OAuth2,
-        Flows = new OpenApiOAuthFlows
-        {
-            AuthorizationCode = new OpenApiOAuthFlow
-            {
-                AuthorizationUrl = new Uri(builder.Configuration["Keycloak:AuthorizationUrl"]!),
-                TokenUrl = new Uri(builder.Configuration["Keycloak:TokenUrl"]!),
-                Scopes = new Dictionary<string, string>
-                {
-                    { "openid", "openid" },
-                    { "profile", "profile" }
-                }
-            }
-
-        }
-    });
-    options.AddSecurityRequirement(new OpenApiSecurityRequirement
-    {
-        {
-            new OpenApiSecurityScheme
-            {
-                Reference = new OpenApiReference
-                {
-                    Id = "Keycloak",
-                    Type = ReferenceType.SecurityScheme
-                },
-                In = ParameterLocation.Header,
-                Name = "Bearer",
-                Scheme = "Bearer"
-            },
-            []
-        }
-    });
-    options.CustomSchemaIds(type => type.ToString());
+    opt.SwaggerDoc("v1", new OpenApiInfo { Title = "AuthService", Version = "v1" });
 });
+builder.Services.AddEndpointsApiExplorer();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
     app.UseSwagger();
-    app.UseSwaggerUI(c =>
-    {
-        c.OAuthClientId("apiGateway-helpdesk");
-        c.OAuthClientSecret("9ttscO6oNh8ZUbYZXx5cUURkINcb3kIP");
-        c.OAuthUsePkce();
-        c.OAuthScopeSeparator(" ");
-        c.SwaggerEndpoint("/swagger/v1/swagger.yaml", "v1");
-    });
+    app.UseSwaggerUI();
 }
 app.MapControllers();
 
