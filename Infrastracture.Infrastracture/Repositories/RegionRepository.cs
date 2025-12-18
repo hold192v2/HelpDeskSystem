@@ -31,7 +31,6 @@ public class RegionRepository: BaseRepository<Region>, IRegion
 
     public async Task<int> GetRegionIdByUserId(Guid userId)
     {
-        var a = _context.Regions.FirstOrDefault(x => x.AdminId == userId);
-        return a.Id;
+         return _context.Regions.FirstOrDefault(x => x.AdminId == userId).Id;
     }
 }

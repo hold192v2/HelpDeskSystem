@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using Infrastracture.Application.DTOs;
 using Infrastracture.Application.UseCases.AdminAppointment;
 using Infrastracture.Application.UseCases.AnaliticAppointment;
 using Infrastracture.Application.UseCases.CreateNewOffice.Patch;
@@ -57,17 +58,14 @@ public class UserController: ControllerBase
     }
     [Authorize]
     [HttpPost("createNewOffice")]
-    public async Task<IActionResult> CreateNewOfficePost([FromBody] CreateNewOfficePostRequest request)
+    public async Task<IActionResult> CreateNewOfficePost([FromBody] CreateNewOfficeQueryDto request)
     {
         var claims = User.Claims
             .GroupBy(c => c.Type)
             .ToDictionary(g => g.Key, g => g.First().Value);
         var userId = new Guid(claims.GetValueOrDefault("user-id")!);
         
-        var trueRole = new List<string> { "admin", "superadmin" };
-        if (!TrueRole(userId, trueRole))
-            return BadRequest();
-        var response = await _mediator.Send(request);
+        var response = await _mediator.Send(new CreateNewOfficePostRequest(request.City, request.Address, request.RegionId, userId));
         if (response is null)
             return BadRequest();
         return Ok();
@@ -104,17 +102,15 @@ public class UserController: ControllerBase
     }
     [Authorize]
     [HttpGet("offices")]
-    public async Task<IActionResult> GetOffices([FromQuery] OfficesRequest query)
+    public async Task<IActionResult> GetOffices([FromQuery] OfficeQueryDto query)
     {
         var claims = User.Claims
             .GroupBy(c => c.Type)
             .ToDictionary(g => g.Key, g => g.First().Value);
         var userId = new Guid(claims.GetValueOrDefault("user-id")!);
+        var request = new OfficesRequest(query.RegionId, query.FillialId, userId);
         
-        var trueRole = new List<string> { "employee", "admin", "analyst","superadmin" };
-        if (!TrueRole(userId, trueRole))
-            return BadRequest();
-        var response = await _mediator.Send(query);
+        var response = await _mediator.Send(request);
         return Ok(response.Offices);
     }
     [Authorize]

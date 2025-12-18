@@ -40,4 +40,9 @@ public class UserRepository: BaseRepository<User>, IUser
     {
         return _context.Users.Any(x => x.Id == id);
     }
+    
+    public int GetUserRegionId(Guid id)
+    {
+        return _context.Users.FirstOrDefaultAsync(x => x.Id == id).Result.RegionId;
+    }
 }

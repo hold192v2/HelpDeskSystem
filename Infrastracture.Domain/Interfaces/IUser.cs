@@ -10,4 +10,5 @@ public interface IUser: IBaseOperationRepository<User>
     public void CreateUser(User user);
     
     Task<bool> IsExist(Guid id);
+    public int GetUserRegionId(Guid id);
 }

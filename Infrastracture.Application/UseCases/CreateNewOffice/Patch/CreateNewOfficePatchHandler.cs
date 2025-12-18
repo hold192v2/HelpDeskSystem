@@ -11,15 +11,18 @@ public class CreateNewOfficePatchHandler: IRequestHandler<CreateNewOfficePatchRe
 {
     private readonly IOffice _office;
     private readonly IMapper _mapper;
-    public CreateNewOfficePatchHandler(IOffice office, IMapper mapper) 
+    private readonly IUnitOfWork _unitOfWork;
+    public CreateNewOfficePatchHandler(IOffice office, IMapper mapper,  IUnitOfWork unitOfWork) 
     {
         _office = office;
         _mapper = mapper;
+        _unitOfWork = unitOfWork;
     }
 
     public async Task<Response> Handle(CreateNewOfficePatchRequest request, CancellationToken cancellationToken)
     {
         _office.EditOffice(request.OfficeId, request.City, request.Address);
+        await _unitOfWork.Commit(cancellationToken);
         return new Response("", 200);
     }
 }

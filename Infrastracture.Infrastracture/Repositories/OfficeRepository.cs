@@ -17,11 +17,11 @@ public class OfficeRepository: BaseRepository<Domain.Entities.Office>, IOffice
         return _context.Offices.FirstOrDefault(x => x.Id == officeId);
     }
 
-    public void AddOffice(string city, string adress, int regionId)
+    public void AddOffice(string city, string address, int regionId)
     {
         var office = new Domain.Entities.Office();
         office.City = city;
-        office.Address = adress;
+        office.Address = address;
         office.RegionId = regionId;
         _context.Offices.Add(office);
     }

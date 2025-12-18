@@ -3,4 +3,4 @@ using MediatR;
 
 namespace Infrastracture.Application.UseCases.CreateNewOffice.Post;
 
-public record CreateNewOfficePostRequest(string City, string Address, int RegionId): IRequest<Response>;
+public record CreateNewOfficePostRequest(string City, string Address, int? RegionId, Guid UserId): IRequest<Response>;

@@ -10,15 +10,25 @@ public class CreateNewOfficePostHandler: IRequestHandler<CreateNewOfficePostRequ
 {
     private readonly IOffice _office;
     private readonly IMapper _mapper;
-    public CreateNewOfficePostHandler(IOffice office, IMapper mapper) 
+    private readonly IUnitOfWork _unitOfWork;
+    private readonly IUser _userRepository;
+    public CreateNewOfficePostHandler(IOffice office, IMapper mapper, IUnitOfWork unitOfWork, IUser userRepository)
     {
         _office = office;
         _mapper = mapper;
+        _unitOfWork = unitOfWork;
+        _userRepository =  userRepository;
     }
     
     public async Task<Response> Handle(CreateNewOfficePostRequest request, CancellationToken cancellationToken)
     {
-        _office.AddOffice(request.City, request.Address, request.RegionId);
+        int regionId;
+        if (request.RegionId == null)
+            regionId = _userRepository.GetUserRegionId(request.UserId);
+        else regionId = (int)request.RegionId;
+        
+        _office.AddOffice(request.City, request.Address, regionId);
+        await _unitOfWork.Commit(cancellationToken);
         return new Response("", 200);
     }
 }
