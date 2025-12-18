@@ -25,7 +25,7 @@ public class GatewayController : ControllerBase
     }
     
 
-    [Authorize(AuthenticationSchemes = "oidc")]
+    [Authorize(AuthenticationSchemes = "OpenIdConnect")]
     [HttpGet("try")]
     public async Task<IActionResult> GetToken()
     {
@@ -43,11 +43,28 @@ public class GatewayController : ControllerBase
     [HttpGet("login")]
     public IActionResult Login([FromQuery] string? returnUrl)
     {
+        if (User?.Identity?.IsAuthenticated == true)
+        {
+            return Redirect(returnUrl ?? "https://service-desk.website.yandexcloud.net");
+        }
         return Challenge(
             new AuthenticationProperties
             {
-                RedirectUri = returnUrl ?? "/"
+                RedirectUri = returnUrl ?? "https://service-desk.website.yandexcloud.net"
             },
+            OpenIdConnectDefaults.AuthenticationScheme
+        );
+    }
+    [Authorize]
+    [HttpGet("logout")]
+    public IActionResult Logout([FromQuery] string? returnUrl)
+    {
+        return SignOut(
+            new AuthenticationProperties
+            {
+                RedirectUri = "https://socially-advantaged-moth.cloudpub.ru/gateway/login"
+            },
+            CookieAuthenticationDefaults.AuthenticationScheme,
             OpenIdConnectDefaults.AuthenticationScheme
         );
     }

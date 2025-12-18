@@ -1,3 +1,4 @@
+using System.Net;
 using System.Security.Claims;
 using DTOs;
 using Keycloak.AuthServices.Authentication;
@@ -9,6 +10,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
 
+
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddOpenApi();
 builder.Services.AddControllers();
@@ -18,6 +20,20 @@ builder.Services
     .AddAuthorization()
     .AddKeycloakAuthorization()
     .AddAuthorizationBuilder();
+
+
+//порезать при деплое
+builder.Services.AddSingleton<HttpMessageHandler>(_ =>
+    new HttpClientHandler
+    {
+        ServerCertificateCustomValidationCallback =
+            HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+    });
+
+builder.Services.AddSingleton(sp =>
+    new HttpClient(sp.GetRequiredService<HttpMessageHandler>()));
+//
+
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(o =>
@@ -40,11 +56,13 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 builder.Services.AddMassTransit(x =>
 {
     x.AddRequestClient<UserCheckAuthRequestDto>();
+    x.AddRequestClient<RegisterIntoInfrastructureDto>();
 
     x.UsingRabbitMq((context, cfg) =>
     {
         cfg.Host("amqps://ryqfbrei:ZzSKvw_5rVinY_QLFwQ3evnA2EJgogn4@kebnekaise.lmq.cloudamqp.com/ryqfbrei");
         cfg.Message<UserCheckAuthRequestDto>(x => x.SetEntityName("check-auth-queue"));
+        cfg.Message<RegisterIntoInfrastructureDto>(x => x.SetEntityName("register-queue"));
     });
 });
 

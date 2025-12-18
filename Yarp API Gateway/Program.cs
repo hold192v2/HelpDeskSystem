@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.OpenApi.Models;
 using StackExchange.Redis;
 using Yarp_API_Gateway.Extentions;
@@ -17,7 +18,9 @@ builder.Services.AddCors(options =>
     options.AddPolicy("FrontendPolicy", policy =>
     {
         policy
-            .WithOrigins("https://test-auth.website.yandexcloud.net")
+            .WithOrigins("https://test-auth.website.yandexcloud.net",
+               "http://localhost:5173", 
+               "https://service-desk.website.yandexcloud.net")
             .AllowAnyHeader()
             .AllowAnyMethod()
             .AllowCredentials();
@@ -46,6 +49,20 @@ builder.Services.AddAuthentication(options =>
             options.Cookie.HttpOnly = true;
             options.Cookie.SameSite = SameSiteMode.None; 
             options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+            
+            options.Events = new CookieAuthenticationEvents
+            {
+                OnRedirectToLogin = ctx =>
+                {
+                    ctx.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                    return Task.CompletedTask;
+                },
+                OnRedirectToAccessDenied = ctx =>
+                {
+                    ctx.Response.StatusCode = StatusCodes.Status403Forbidden;
+                    return Task.CompletedTask;
+                }
+            };
         }
     )
     .AddOpenIdConnect("OpenIdConnect", options =>
@@ -56,6 +73,9 @@ builder.Services.AddAuthentication(options =>
         options.ClientSecret = builder.Configuration["Keycloak:ClientSecret"];
         options.ResponseType = "code";
         options.SaveTokens = true; 
+        options.CallbackPath = "/signin-oidc";
+        options.SignedOutCallbackPath = "/signout-callback-oidc";
+        
         options.BackchannelHttpHandler = new HttpClientHandler
         {
             ServerCertificateCustomValidationCallback =
@@ -110,6 +130,12 @@ app.UseSwaggerUI(c =>
 });
 app.UseCors("FrontendPolicy");
 //app.UseHttpsRedirection();
+app.UseForwardedHeaders(new ForwardedHeadersOptions
+{
+    ForwardedHeaders =
+        ForwardedHeaders.XForwardedFor |
+        ForwardedHeaders.XForwardedProto
+});
 app.UseAuthentication().UseAuthorization();
 app.MapControllers();
 app.MapReverseProxy().RequireAuthorization("ApiPolicy");;

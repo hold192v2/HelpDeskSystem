@@ -22,28 +22,35 @@ public class AuthController : ControllerBase
         _client = client;
         _config = config;
     }
-    
+
     [Authorize]
     [HttpGet("me")]
     public async Task<ActionResult> AuthCheck()
     {
-        if (!User.Identity?.IsAuthenticated ?? true)
-            return Unauthorized(); 
         var claims = User.Claims
             .GroupBy(c => c.Type)
             .ToDictionary(g => g.Key, g => g.First().Value);
         var userId = new Guid(claims.GetValueOrDefault("user-id")!);
-        var isExisting = await _client.GetResponse<UserCheckAuthDto>
+        var userResponse = await _client.GetResponse<UserCheckAuthDto>
             (new UserCheckAuthRequestDto { UserId = userId });
-        if (isExisting.Message.UserId != null)
+
+        if (userResponse.Message.UserId != null)
         {
-            return Ok(isExisting.Message);
+            var createdUser = new AuthUserMeDto(userResponse.Message);
+            return Ok(createdUser);
         }
+
         var keycloak = new Keycloak.Net.KeycloakClient(
-            _config["Authentication:ValidIssuer"]!,
+            _config["Authentication:ValidUrl"]!,
             _config["Keycloak:ClientSecret"]!
         );
-        return NoContent();
+        
+        var user = await keycloak.GetUserAsync("HelpDeskKeycloak", userId.ToString());
+        var authNoUser = new AuthNoUserDto(user.Attributes?["surname"]?.FirstOrDefault()!,
+            user.Attributes?["name"]?.FirstOrDefault()!,
+            user.Attributes?["patronymic"]?.FirstOrDefault()!,
+            user.Attributes?["email"]?.FirstOrDefault()!, false);
+        return Ok(authNoUser);
 
     }
 
@@ -71,34 +78,4 @@ public class AuthController : ControllerBase
         }
         return NotFound();
     }
-
-
-
-
-
-[Authorize]
-    [HttpGet("me2")]
-    public IActionResult AuthCheck2()
-    {
-        if (true)
-        {
-            var realmAccessClaim = User.Claims.FirstOrDefault(c => c.Type == "realm_access")?.Value;
-            var claims = User.Claims.ToDictionary(c => c.Type, c => c.Value);
-            var name = claims.GetValueOrDefault("name");
-            var realmAccess = JsonDocument.Parse(realmAccessClaim);
-            var roles = realmAccess.RootElement
-                .GetProperty("roles")
-                .EnumerateArray()
-                .Select(r => r.GetString())
-                .ToList();
-            return Ok(new
-            {
-                Name = name,
-                Roles = roles
-            });
-        }
-        return StatusCode(203, "Пользователь не создан, необходимо указать офис");
-            
-    }
-    
 }
