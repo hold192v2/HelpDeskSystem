@@ -1,6 +1,7 @@
 using Infrastracture.Domain.Interfaces;
 using Infrastracture.Infrastracture.Context;
 using Infrastracture.Infrastracture.Repositories;
+using Infrastracture.Infrastracture.Seeds.Extentions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -20,5 +21,7 @@ public static class ServiceExtentions
         serviceCollection.AddScoped<IRole, RoleRepository>();
         serviceCollection.AddScoped<IUser, UserRepository>();
         serviceCollection.AddScoped<IPlaceOfWork, PlaceOfWorkRepository>();
+        serviceCollection.AddScoped<IUnitOfWork, UnitOfWork>();
+        serviceCollection.AddScoped<SeedInitializer>();
     }
 }

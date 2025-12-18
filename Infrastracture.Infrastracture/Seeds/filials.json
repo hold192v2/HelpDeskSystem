@@ -1,0 +1,42 @@
+[
+  {
+    "id": 1,
+    "name": "Дальневосточный",
+    "analystId" : null
+  },
+  {
+    "id": 2,
+    "name": "Приволжский",
+    "analystId" : null
+  },
+  {
+    "id": 3,
+    "name": "Северо-Западный",
+    "analystId" : null
+  },
+  {
+    "id": 4,
+    "name": "Северо-Кавказский",
+    "analystId" : null
+  },
+  {
+    "id": 5,
+    "name": "Сибирский",
+    "analystId" : null
+  },
+  {
+    "id": 6,
+    "name": "Уральский",
+    "analystId" : null
+  },
+  {
+    "id": 7,
+    "name": "Центральный",
+    "analystId" : null
+  },
+  {
+    "id": 8,
+    "name": "Южный",
+    "analystId" : null
+  }
+]

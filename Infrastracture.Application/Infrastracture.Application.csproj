@@ -18,7 +18,6 @@
       <PackageReference Include="MassTransit" Version="9.0.0-develop.23" />
       <PackageReference Include="MassTransit.RabbitMQ" Version="9.0.0-develop.23" />
       <PackageReference Include="MediatR" Version="13.1.0" />
-      <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="11.1.0" />
       <PackageReference Include="Microsoft.Extensions.Http" Version="10.0.0" />
       <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.15.0" />
     </ItemGroup>

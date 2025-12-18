@@ -1,0 +1,500 @@
+[
+  {
+    "id": 1,
+    "name": "Республика Адыгея",
+    "filialId": 8,
+    "adminId": null
+  },
+  {
+    "id": 2,
+    "name": "Республика Башкортостан",
+    "filialId": 2,
+    "adminId": null
+  },
+  {
+    "id": 3,
+    "name": "Республика Бурятия",
+    "filialId": 1,
+    "adminId": null
+  },
+  {
+    "id": 4,
+    "name": "Республика Алтай",
+    "filialId": 5,
+    "adminId": null
+  },
+  {
+    "id": 5,
+    "name": "Республика Дагестан",
+    "filialId": 4,
+    "adminId": null
+  },
+  {
+    "id": 6,
+    "name": "Республика Ингушетия",
+    "filialId": 4,
+    "adminId": null
+  },
+  {
+    "id": 7,
+    "name": "Кабардино-Балкарская Республика",
+    "filialId": 4,
+    "adminId": null
+  },
+  {
+    "id": 8,
+    "name": "Республика Калмыкия",
+    "filialId": 8,
+    "adminId": null
+  },
+  {
+    "id": 9,
+    "name": "Карачаево-Черкесская Республика",
+    "filialId": 4,
+    "adminId": null
+  },
+  {
+    "id": 10,
+    "name": "Республика Карелия",
+    "filialId": 3,
+    "adminId": null
+  },
+  {
+    "id": 11,
+    "name": "Республика Коми",
+    "filialId": 3,
+    "adminId": null
+  },
+  {
+    "id": 12,
+    "name": "Республика Марий Эл",
+    "filialId": 2,
+    "adminId": null
+  },
+  {
+    "id": 13,
+    "name": "Республика Мордовия",
+    "filialId": 2,
+    "adminId": null
+  },
+  {
+    "id": 14,
+    "name": "Республика Саха /Якутия/",
+    "filialId": 1,
+    "adminId": null
+  },
+  {
+    "id": 15,
+    "name": "Республика Северная Осетия - Алания",
+    "filialId": 4,
+    "adminId": null
+  },
+  {
+    "id": 16,
+    "name": "Республика Татарстан",
+    "filialId": 2,
+    "adminId": null
+  },
+  {
+    "id": 17,
+    "name": "Республика Тыва",
+    "filialId": 5,
+    "adminId": null
+  },
+  {
+    "id": 18,
+    "name": "Удмуртская Республика",
+    "filialId": 2,
+    "adminId": null
+  },
+  {
+    "id": 19,
+    "name": "Республика Хакасия",
+    "filialId": 5,
+    "adminId": null
+  },
+  {
+    "id": 20,
+    "name": "Чеченская Республика",
+    "filialId": 4,
+    "adminId": null
+  },
+  {
+    "id": 21,
+    "name": "Чувашская Республика",
+    "filialId": 2,
+    "adminId": null
+  },
+  {
+    "id": 22,
+    "name": "Алтайский край",
+    "filialId": 5,
+    "adminId": null
+  },
+  {
+    "id": 23,
+    "name": "Краснодарский край",
+    "filialId": 8,
+    "adminId": null
+  },
+  {
+    "id": 24,
+    "name": "Красноярский край",
+    "filialId": 5,
+    "adminId": null
+  },
+  {
+    "id": 25,
+    "name": "Приморский край",
+    "filialId": 1,
+    "adminId": null
+  },
+  {
+    "id": 26,
+    "name": "Ставропольский край",
+    "filialId": 4,
+    "adminId": null
+  },
+  {
+    "id": 27,
+    "name": "Хабаровский край",
+    "filialId": 1,
+    "adminId": null
+  },
+  {
+    "id": 28,
+    "name": "Амурская область",
+    "filialId": 1,
+    "adminId": null
+  },
+  {
+    "id": 29,
+    "name": "Архангельская область",
+    "filialId": 3,
+    "adminId": null
+  },
+  {
+    "id": 30,
+    "name": "Астраханская область",
+    "filialId": 8,
+    "adminId": null
+  },
+  {
+    "id": 31,
+    "name": "Белгородская область",
+    "filialId": 7,
+    "adminId": null
+  },
+  {
+    "id": 32,
+    "name": "Брянская область",
+    "filialId": 7,
+    "adminId": null
+  },
+  {
+    "id": 33,
+    "name": "Владимирская область",
+    "filialId": 7,
+    "adminId": null
+  },
+  {
+    "id": 34,
+    "name": "Волгоградская область",
+    "filialId": 8,
+    "adminId": null
+  },
+  {
+    "id": 35,
+    "name": "Вологодская область",
+    "filialId": 3,
+    "adminId": null
+  },
+  {
+    "id": 36,
+    "name": "Воронежская область",
+    "filialId": 7,
+    "adminId": null
+  },
+  {
+    "id": 37,
+    "name": "Ивановская область",
+    "filialId": 7,
+    "adminId": null
+  },
+  {
+    "id": 38,
+    "name": "Иркутская область",
+    "filialId": 5,
+    "adminId": null
+  },
+  {
+    "id": 39,
+    "name": "Калининградская область",
+    "filialId": 3,
+    "adminId": null
+  },
+  {
+    "id": 40,
+    "name": "Калужская область",
+    "filialId": 7,
+    "adminId": null
+  },
+  {
+    "id": 41,
+    "name": "Камчатский край",
+    "filialId": 1,
+    "adminId": null
+  },
+  {
+    "id": 42,
+    "name": "Кемеровская область - Кузбасс",
+    "filialId": 5,
+    "adminId": null
+  },
+  {
+    "id": 43,
+    "name": "Кировская область",
+    "filialId": 2,
+    "adminId": null
+  },
+  {
+    "id": 44,
+    "name": "Костромская область",
+    "filialId": 7,
+    "adminId": null
+  },
+  {
+    "id": 45,
+    "name": "Курганская область",
+    "filialId": 6,
+    "adminId": null
+  },
+  {
+    "id": 46,
+    "name": "Курская область",
+    "filialId": 7,
+    "adminId": null
+  },
+  {
+    "id": 47,
+    "name": "Ленинградская область",
+    "filialId": 3,
+    "adminId": null
+  },
+  {
+    "id": 48,
+    "name": "Липецкая область",
+    "filialId": 7,
+    "adminId": null
+  },
+  {
+    "id": 49,
+    "name": "Магаданская область",
+    "filialId": 1,
+    "adminId": null
+  },
+  {
+    "id": 50,
+    "name": "Московская область",
+    "filialId": 7,
+    "adminId": null
+  },
+  {
+    "id": 51,
+    "name": "Мурманская область",
+    "filialId": 3,
+    "adminId": null
+  },
+  {
+    "id": 52,
+    "name": "Нижегородская область",
+    "filialId": 2,
+    "adminId": null
+  },
+  {
+    "id": 53,
+    "name": "Новгородская область",
+    "filialId": 3,
+    "adminId": null
+  },
+  {
+    "id": 54,
+    "name": "Новосибирская область",
+    "filialId": 5,
+    "adminId": null
+  },
+  {
+    "id": 55,
+    "name": "Омская область",
+    "filialId": 5,
+    "adminId": null
+  },
+  {
+    "id": 56,
+    "name": "Оренбургская область",
+    "filialId": 2,
+    "adminId": null
+  },
+  {
+    "id": 57,
+    "name": "Орловская область",
+    "filialId": 7,
+    "adminId": null
+  },
+  {
+    "id": 58,
+    "name": "Пензенская область",
+    "filialId": 2,
+    "adminId": null
+  },
+  {
+    "id": 59,
+    "name": "Пермский край",
+    "filialId": 2,
+    "adminId": null
+  },
+  {
+    "id": 60,
+    "name": "Псковская область",
+    "filialId": 3,
+    "adminId": null
+  },
+  {
+    "id": 61,
+    "name": "Ростовская область",
+    "filialId": 8,
+    "adminId": null
+  },
+  {
+    "id": 62,
+    "name": "Рязанская область",
+    "filialId": 7,
+    "adminId": null
+  },
+  {
+    "id": 63,
+    "name": "Самарская область",
+    "filialId": 2,
+    "adminId": null
+  },
+  {
+    "id": 64,
+    "name": "Саратовская область",
+    "filialId": 2,
+    "adminId": null
+  },
+  {
+    "id": 65,
+    "name": "Сахалинская область",
+    "filialId": 1,
+    "adminId": null
+  },
+  {
+    "id": 66,
+    "name": "Свердловская область",
+    "filialId": 6,
+    "adminId": null
+  },
+  {
+    "id": 67,
+    "name": "Смоленская область",
+    "filialId": 7,
+    "adminId": null
+  },
+  {
+    "id": 68,
+    "name": "Тамбовская область",
+    "filialId": 7,
+    "adminId": null
+  },
+  {
+    "id": 69,
+    "name": "Тверская область",
+    "filialId": 7,
+    "adminId": null
+  },
+  {
+    "id": 70,
+    "name": "Томская область",
+    "filialId": 5,
+    "adminId": null
+  },
+  {
+    "id": 71,
+    "name": "Тульская область",
+    "filialId": 7,
+    "adminId": null
+  },
+  {
+    "id": 72,
+    "name": "Тюменская область",
+    "filialId": 6,
+    "adminId": null
+  },
+  {
+    "id": 73,
+    "name": "Ульяновская область",
+    "filialId": 2,
+    "adminId": null
+  },
+  {
+    "id": 74,
+    "name": "Челябинская область",
+    "filialId": 6,
+    "adminId": null
+  },
+  {
+    "id": 75,
+    "name": "Забайкальский край",
+    "filialId": 1,
+    "adminId": null
+  },
+  {
+    "id": 76,
+    "name": "Ярославская область",
+    "filialId": 7,
+    "adminId": null
+  },
+  {
+    "id": 77,
+    "name": "Москва",
+    "filialId": 7,
+    "adminId": null
+  },
+  {
+    "id": 78,
+    "name": "Санкт-Петербург",
+    "filialId": 3,
+    "adminId": null
+  },
+  {
+    "id": 79,
+    "name": "Еврейская автономная область",
+    "filialId": 1,
+    "adminId": null
+  },
+  {
+    "id": 81,
+    "name": "Ханты-Мансийский Автономный округ - Югра",
+    "filialId": 6,
+    "adminId": null
+  },
+  {
+    "id": 83,
+    "name": "Ненецкий автономный округ",
+    "filialId": 3,
+    "adminId": null
+  },
+  {
+    "id": 87,
+    "name": "Чукотский автономный округ",
+    "filialId": 1,
+    "adminId": null
+  },
+  {
+    "id": 89,
+    "name": "Ямало-Ненецкий автономный округ",
+    "filialId": 6,
+    "adminId": null
+  }
+]
