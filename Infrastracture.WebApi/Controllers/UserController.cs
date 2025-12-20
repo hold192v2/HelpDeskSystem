@@ -22,14 +22,14 @@ namespace Infrastracture.WebApi.Controllers;
 public class UserController: ControllerBase
 {
     private readonly IMediator _mediator;
-    private readonly IUser _user;
-    private readonly IRole _role;
+    private readonly IUserRepository _userRepository;
+    private readonly IRoleRepository _roleRepository;
 
-    public UserController(IMediator mediator, IUser user, IRole role)
+    public UserController(IMediator mediator, IUserRepository userRepository, IRoleRepository roleRepository)
     {
         _mediator = mediator;
-        _user = user;
-        _role = role;
+        _userRepository = userRepository;
+        _roleRepository = roleRepository;
     }
     [Authorize] //ввести адекватную авторизацию, все ломается
     [HttpGet("getUserInfo")]
@@ -158,8 +158,8 @@ public class UserController: ControllerBase
 
     private bool TrueRole(Guid userId, List<string> trueRoles)
     {
-        var user = _user.GetUserByUserId(userId).Result;
-        var role = _role.GetRoleByUser(user).Result;
+        var user = _userRepository.GetUserByUserId(userId).Result;
+        var role = _roleRepository.GetRoleByUser(user).Result;
         return trueRoles.Contains(role.Name);
     }
 }

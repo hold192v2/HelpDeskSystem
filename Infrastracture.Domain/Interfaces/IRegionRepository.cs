@@ -2,7 +2,7 @@ using Infrastracture.Domain.Entities;
 
 namespace Infrastracture.Domain.Interfaces;
 
-public interface IRegion: IBaseOperationRepository<Region>
+public interface IRegionRepository
 {
     Task<List<Region>> GetAllRegions();
     Task<List<Region>> GetRegionsByFilialId(int filialId);

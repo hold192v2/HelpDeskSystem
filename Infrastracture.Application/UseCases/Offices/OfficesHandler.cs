@@ -10,16 +10,16 @@ namespace Infrastracture.Application.UseCases.Offices;
 public class OfficesHandler: IRequestHandler<OfficesRequest, Response>
 {
     private readonly IMapper _mapper;
-    private readonly IRegion _region;
-    private readonly IOffice _office;
-    private readonly IUser _user;
+    private readonly IRegionRepository _regionRepository;
+    private readonly IOfficeRepository _officeRepository;
+    private readonly IUserRepository _userRepository;
 
-    public OfficesHandler(IRegion region, IMapper mapper, IOffice office,  IUser user)
+    public OfficesHandler(IRegionRepository regionRepository, IMapper mapper, IOfficeRepository officeRepository,  IUserRepository userRepository)
     {
-        _region = region;
+        _regionRepository = regionRepository;
         _mapper = mapper;
-        _office = office;
-        _user = user;
+        _officeRepository = officeRepository;
+        _userRepository = userRepository;
     }
     
     public async Task<Response> Handle(OfficesRequest request, CancellationToken cancellationToken)
@@ -30,22 +30,22 @@ public class OfficesHandler: IRequestHandler<OfficesRequest, Response>
 
         if (request.RegionId.HasValue)
         {
-            var region = await _region.GetRegionByRegionId(request.RegionId.Value);
+            var region = await _regionRepository.GetRegionByRegionId(request.RegionId.Value);
             regions = new List<Region> { region };
         }
         else if (request.FillialId.HasValue)
-            regions = await _region.GetRegionsByFilialId(request.FillialId.Value);
+            regions = await _regionRepository.GetRegionsByFilialId(request.FillialId.Value);
         else
         {
-            var regionId = _user.GetUserRegionId(request.UserId);
-            var region = await _region.GetRegionByRegionId(regionId);
+            var regionId = await _userRepository.GetUserRegionId(request.UserId);
+            var region = await _regionRepository.GetRegionByRegionId(regionId);
             regions = new List<Region> { region };
         }
         
         var officesResult = new List<OfficeDTO>();
         foreach (var region in regions)
         {
-            var offices = _office.GetOfficesByRegionId(region.Id).Result;
+            var offices = _officeRepository.GetOfficesByRegionIdAsync(region.Id).Result;
             foreach (var o in offices)
                 officesResult.Add(new OfficeDTO(o.Id, $"{o.City} {o.Address}", o.RegionId));
         }

@@ -3,11 +3,11 @@ using Infrastracture.Infrastracture.Context;
 
 namespace Infrastracture.Infrastracture.Repositories;
 
-public class FilialAreaRepository: BaseRepository<Domain.Entities.FilialArea>, IFilialArea
+public class FilialAreaRepository : IFilialAreaRepository
 {
     private readonly AppDbContext _context;
     
-    public FilialAreaRepository(AppDbContext appDbContext) : base(appDbContext)
+    public FilialAreaRepository(AppDbContext appDbContext)
     {
         _context = appDbContext;
     }

@@ -5,11 +5,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastracture.Infrastracture.Repositories;
 
-public class UserRepository: BaseRepository<User>, IUser
+public class UserRepository :  IUserRepository
 {
     private readonly AppDbContext _context;
     
-    public UserRepository(AppDbContext appDbContext) : base(appDbContext)
+    public UserRepository(AppDbContext appDbContext) 
     {
         _context = appDbContext;
     }
@@ -21,9 +21,15 @@ public class UserRepository: BaseRepository<User>, IUser
             .FirstOrDefaultAsync(x => x.Id == id);
     }
 
-    public async Task<List<User>> GetUsersByRegionId(int regionId)
+    public async Task<List<User>> GetPerformersByRegionId(int regionId, int page, int pageSize)
     {
-        return _context.Users.Include(o => o.Offices).Where(x => x.RegionId == regionId).ToList();
+        return await _context.Users
+            .Where(user => user.RegionId == regionId && user.RoleId == 2)
+            .OrderBy(user => user.UpdatedAt)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .Include(o => o.Offices)
+            .ToListAsync();
     }
 
     public async Task<List<User>> GetUsersByFullname(string fullname)
@@ -31,9 +37,10 @@ public class UserRepository: BaseRepository<User>, IUser
         return _context.Users.Where(x => (x.Name + " " + x.Surname + " " + x.Patronymic).Contains(fullname)).ToList();
     }
 
-    public void CreateUser(User user)
+    public async Task CreateUser(User user)
     {
-        _context.Users.Add(user);
+        await _context.Users.AddAsync(user);
+        
     }
 
     public async Task<bool> IsExist(Guid id)
@@ -41,8 +48,10 @@ public class UserRepository: BaseRepository<User>, IUser
         return _context.Users.Any(x => x.Id == id);
     }
     
-    public int GetUserRegionId(Guid id)
+    public async Task<int> GetUserRegionId(Guid id)
     {
         return _context.Users.FirstOrDefaultAsync(x => x.Id == id).Result.RegionId;
     }
+
+    public async Task<int> CountPerformersAsync() => await _context.Users.CountAsync();
 }

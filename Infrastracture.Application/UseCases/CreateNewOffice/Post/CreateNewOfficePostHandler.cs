@@ -8,26 +8,26 @@ namespace Infrastracture.Application.UseCases.CreateNewOffice.Post;
 
 public class CreateNewOfficePostHandler: IRequestHandler<CreateNewOfficePostRequest, Response>
 {
-    private readonly IOffice _office;
+    private readonly IOfficeRepository _officeRepository;
     private readonly IMapper _mapper;
     private readonly IUnitOfWork _unitOfWork;
-    private readonly IUser _userRepository;
-    public CreateNewOfficePostHandler(IOffice office, IMapper mapper, IUnitOfWork unitOfWork, IUser userRepository)
+    private readonly IUserRepository _userRepositoryRepository;
+    public CreateNewOfficePostHandler(IOfficeRepository officeRepository, IMapper mapper, IUnitOfWork unitOfWork, IUserRepository userRepositoryRepository)
     {
-        _office = office;
+        _officeRepository = officeRepository;
         _mapper = mapper;
         _unitOfWork = unitOfWork;
-        _userRepository =  userRepository;
+        _userRepositoryRepository =  userRepositoryRepository;
     }
     
     public async Task<Response> Handle(CreateNewOfficePostRequest request, CancellationToken cancellationToken)
     {
         int regionId;
         if (request.RegionId == null)
-            regionId = _userRepository.GetUserRegionId(request.UserId);
+            regionId = await _userRepositoryRepository.GetUserRegionId(request.UserId);
         else regionId = (int)request.RegionId;
         
-        _office.AddOffice(request.City, request.Address, regionId);
+        await _officeRepository.AddOfficeAsync(request.City, request.Address, regionId);
         await _unitOfWork.Commit(cancellationToken);
         return new Response("", 200);
     }

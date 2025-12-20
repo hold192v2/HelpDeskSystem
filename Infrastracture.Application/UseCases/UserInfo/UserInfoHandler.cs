@@ -9,27 +9,26 @@ namespace Infrastracture.Application.UseCases.UserInfo;
 
 public class UserInfoHandler: IRequestHandler<UserInfoRequest, Response>
 {
-    private readonly IUser _user;
-    private readonly IRole _role;
-    private readonly IOffice _office;
+    private readonly IUserRepository _userRepositoryRepository;
+    private readonly IRoleRepository _roleRepositoryRepository;
     private readonly IMapper _mapper;
-    private readonly IPlaceOfWork _placeOfWork;
-    public UserInfoHandler(IUser user, IRole role, IOffice office, IMapper mapper, IPlaceOfWork placeOfWork) 
+    private readonly IRegionRepository _regionRepositoryRepository;
+    public UserInfoHandler(IUserRepository userRepositoryRepository, IRoleRepository roleRepositoryRepository, IMapper mapper,  IRegionRepository regionRepositoryRepository) 
     {
-        _user = user;
-        _role = role;
-        _office = office;
+        _userRepositoryRepository = userRepositoryRepository;
+        _roleRepositoryRepository = roleRepositoryRepository;
         _mapper = mapper;
-        _placeOfWork = placeOfWork;
+        _regionRepositoryRepository = regionRepositoryRepository;
     }
     
     public async Task<Response> Handle(UserInfoRequest request, CancellationToken cancellationToken)
     {
         
-        var user = await _user.GetUserByUserId(request.UserId);
-        var role = await _role.GetRoleByUser(user);
+        var user = await _userRepositoryRepository.GetUserByUserId(request.UserId);
+        var role = await _roleRepositoryRepository.GetRoleByUser(user);
+        var region = await _regionRepositoryRepository.GetRegionIdByUserId(request.UserId);
         
-        var userInfo = _mapper.Map(user, new  UserInfoDTO());
+        var userInfo = _mapper.Map<UserInfoDTO>(user, opt => opt.Items["Region"] = region);
         userInfo.RoleName = role.Name;
         if (role.Name == "performer") //вырезать после добавление сервиса
         {

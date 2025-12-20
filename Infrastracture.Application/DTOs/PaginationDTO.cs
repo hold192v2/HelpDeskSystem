@@ -1,8 +1,3 @@
 namespace Infrastracture.Application.DTOs;
 
-public class PaginationDTO
-{
-    public int PageIndex { get; set; }
-    public int TotalRecords { get; set; }
-    public int TotalPages { get; set; }
-}
+public record PaginationDTO(int PageIndex, int TotalRecords, int TotalPages);

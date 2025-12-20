@@ -2,7 +2,7 @@ using System.Text.Json.Serialization;
 
 namespace Infrastracture.Domain.Entities;
 
-public class FilialArea: BaseEntity
+public class FilialArea
 {
     [JsonPropertyName("id")]
     public int Id { get; set; }

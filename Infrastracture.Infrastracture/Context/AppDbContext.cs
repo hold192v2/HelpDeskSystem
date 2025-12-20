@@ -17,7 +17,6 @@ public class AppDbContext: DbContext
     public DbSet<Office> Offices { get; set; }
     public DbSet<Region> Regions { get; set; }
     public DbSet<FilialArea> FilialAreas { get; set; }
-    public DbSet<PlaceOfWork> PlaceOfWork { get; set; }
 }
 
 public class YourDbContextFactory : IDesignTimeDbContextFactory<AppDbContext>

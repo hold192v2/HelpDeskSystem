@@ -9,19 +9,19 @@ namespace Infrastracture.Application.UseCases.CreateNewOffice.Patch;
 
 public class CreateNewOfficePatchHandler: IRequestHandler<CreateNewOfficePatchRequest, Response>
 {
-    private readonly IOffice _office;
+    private readonly IOfficeRepository _officeRepository;
     private readonly IMapper _mapper;
     private readonly IUnitOfWork _unitOfWork;
-    public CreateNewOfficePatchHandler(IOffice office, IMapper mapper,  IUnitOfWork unitOfWork) 
+    public CreateNewOfficePatchHandler(IOfficeRepository officeRepository, IMapper mapper,  IUnitOfWork unitOfWork) 
     {
-        _office = office;
+        _officeRepository = officeRepository;
         _mapper = mapper;
         _unitOfWork = unitOfWork;
     }
 
     public async Task<Response> Handle(CreateNewOfficePatchRequest request, CancellationToken cancellationToken)
     {
-        _office.EditOffice(request.OfficeId, request.City, request.Address);
+        await _officeRepository.EditOfficeAsync(request.OfficeId, request.City, request.Address);
         await _unitOfWork.Commit(cancellationToken);
         return new Response("", 200);
     }

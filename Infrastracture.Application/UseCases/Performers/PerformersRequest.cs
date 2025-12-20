@@ -3,4 +3,4 @@ using MediatR;
 
 namespace Infrastracture.Application.UseCases.Performers;
 
-public record PerformersRequest(int Page, string? Category, Guid? OfficeId, string? Fullname, Guid? UserId): IRequest<Response>;
+public record PerformersRequest(int Page, List<string?> Categories, List<Guid?> OfficeIds, string? Fullname, Guid? UserId): IRequest<Response>;

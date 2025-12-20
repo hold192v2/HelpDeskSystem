@@ -8,27 +8,19 @@ namespace Infrastracture.Application.UseCases.Regions;
 
 public class RegionsHandler: IRequestHandler<RegionsRequest, Response>
 {
-    private readonly IRegion _region;
+    private readonly IRegionRepository _regionRepository;
     private readonly IMapper _mapper;
 
-    public RegionsHandler(IRegion region, IMapper mapper)
+    public RegionsHandler(IRegionRepository regionRepository, IMapper mapper)
     {
-        _region = region;
+        _regionRepository = regionRepository;
         _mapper = mapper;
     }
     
     public async Task<Response> Handle(RegionsRequest request, CancellationToken cancellationToken)
     {
-        var regions = _region.GetAll();
-        var result = new List<RegionDTO>();
-        foreach (var region in regions)
-        {
-            var regionDTO = new RegionDTO();
-            regionDTO.Name = region.Name;
-            regionDTO.RegionId = region.Id;
-            result.Add(regionDTO);
-        }
-        // result = regions.Select(r => _mapper.Map(r, new RegionDTO())).ToList();
-        return new Response("Regions", 200, result);
+        var regions = await _regionRepository.GetAllRegions();
+        var resultDto = regions.Select(region => new RegionDTO(region.Id, region.Name)).ToList();
+        return new Response("Regions", 200, resultDto);
     }
 }

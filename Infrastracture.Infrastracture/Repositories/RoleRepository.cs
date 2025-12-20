@@ -4,11 +4,11 @@ using Infrastracture.Infrastracture.Context;
 
 namespace Infrastracture.Infrastracture.Repositories;
 
-public class RoleRepository: BaseRepository<Role>, IRole
+public class RoleRepository :  IRoleRepository
 {
     private readonly AppDbContext _context;
     
-    public RoleRepository(AppDbContext appDbContext) : base(appDbContext)
+    public RoleRepository(AppDbContext appDbContext)
     {
         _context = appDbContext;
     }

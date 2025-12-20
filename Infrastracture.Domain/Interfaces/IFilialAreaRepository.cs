@@ -2,7 +2,7 @@ using Infrastracture.Domain.Entities;
 
 namespace Infrastracture.Domain.Interfaces;
 
-public interface IFilialArea: IBaseOperationRepository<FilialArea>
+public interface IFilialAreaRepository
 {
     Task<string> GetFilialName(int filialId);
 }

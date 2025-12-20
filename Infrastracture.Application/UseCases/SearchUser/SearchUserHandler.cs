@@ -9,24 +9,24 @@ namespace Infrastracture.Application.UseCases.SearchUser;
 
 public class SearchUserHandler: IRequestHandler<SearchUserRequest, Response>
 {
-    private readonly IUser _user;
-    private readonly IRole _role;
+    private readonly IUserRepository _userRepository;
+    private readonly IRoleRepository _roleRepository;
     private readonly IMapper _mapper;
 
-    public SearchUserHandler(IUser user, IRole role, IMapper mapper)
+    public SearchUserHandler(IUserRepository userRepository, IRoleRepository roleRepository, IMapper mapper)
     {
-        _user = user;
-        _role = role;
+        _userRepository = userRepository;
+        _roleRepository = roleRepository;
         _mapper = mapper;
     }
     
     public async Task<Response> Handle(SearchUserRequest request, CancellationToken cancellationToken)
     {
-        var user = _user.GetUserByUserId((Guid)request.UserId).Result;
-        var role = _role.GetRoleByUser(user).Result;
-        var users = _user.GetUsersByFullname(request.Fullname).Result;
+        var user = _userRepository.GetUserByUserId((Guid)request.UserId).Result;
+        var role = _roleRepository.GetRoleByUser(user).Result;
+        var users = _userRepository.GetUsersByFullname(request.Fullname).Result;
         if (role.Name == "admin")
-            users = users.Where(u => _role.GetRoleByUser(u).Result.Name == "performer").ToList();
+            users = users.Where(u => _roleRepository.GetRoleByUser(u).Result.Name == "performer").ToList();
         // var result = users.Select(u => _mapper.Map(u, new UserDTO())).ToList();
         var result = new List<UserDTO>();
         foreach (var u in users)

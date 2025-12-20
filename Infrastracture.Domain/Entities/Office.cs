@@ -2,7 +2,7 @@ using System.Text.Json.Serialization;
 
 namespace Infrastracture.Domain.Entities;
 
-public class Office: BaseEntity
+public class Office
 {
     [JsonPropertyName("id")]
     public Guid Id { get; set; }

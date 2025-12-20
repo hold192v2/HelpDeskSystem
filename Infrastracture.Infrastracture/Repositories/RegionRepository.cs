@@ -5,32 +5,32 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastracture.Infrastracture.Repositories;
 
-public class RegionRepository: BaseRepository<Region>, IRegion
+public class RegionRepository :  IRegionRepository
 {
     private readonly AppDbContext _context;
     
-    public RegionRepository(AppDbContext appDbContext) : base(appDbContext)
+    public RegionRepository(AppDbContext appDbContext)
     {
         _context = appDbContext;
     }
 
     public async Task<List<Region>> GetAllRegions()
     {
-        return  _context.Set<Region>().ToList();
+        return await _context.Set<Region>().ToListAsync();
     }
 
     public async Task<List<Region>> GetRegionsByFilialId(int filialId)
     {
-        return _context.Regions.Where(x => x.FilialId == filialId).ToList();
+        return await _context.Regions.Where(x => x.FilialId == filialId).ToListAsync();
     }
 
     public async Task<Region> GetRegionByRegionId(int regionId)
     {
-        return _context.Regions.FirstOrDefault(x => x.Id == regionId);
+        return await _context.Regions.FirstOrDefaultAsync(x => x.Id == regionId);
     }
 
     public async Task<int> GetRegionIdByUserId(Guid userId)
     {
-         return _context.Regions.FirstOrDefault(x => x.AdminId == userId).Id;
+         return _context.Regions.FirstOrDefaultAsync(x => x.AdminId == userId).Id;
     }
 }
