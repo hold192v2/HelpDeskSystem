@@ -21,20 +21,27 @@ public class UserRepository :  IUserRepository
             .FirstOrDefaultAsync(x => x.Id == id);
     }
 
-    public async Task<List<User>> GetPerformersByRegionId(int regionId, int page, int pageSize)
+    public async Task<List<User>> GetPerformersWithSearchByRegionId(int regionId, int page, int pageSize, string searchString)
     {
-        return await _context.Users
-            .Where(user => user.RegionId == regionId && user.RoleId == 2)
-            .OrderBy(user => user.UpdatedAt)
+        var baseQuery = _context.Users
+            .Where(u => u.RegionId == regionId)
+            .Where(u => u.RoleId == 2)
+            .Where(u => EF.Functions.ILike(u.FullName!, $"%{searchString}%"))
+            .AsNoTracking();
+
+        var users = await baseQuery
+            .OrderBy(u => u.UpdatedAt)
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
-            .Include(o => o.Offices)
+            .Include(u => u.Offices)
             .ToListAsync();
+
+        return users;
     }
 
     public async Task<List<User>> GetUsersByFullname(string fullname)
     {
-        return _context.Users.Where(x => (x.Name + " " + x.Surname + " " + x.Patronymic).Contains(fullname)).ToList();
+        return await _context.Users.Where(x => (x.Name + " " + x.Surname + " " + x.Patronymic).Contains(fullname)).ToListAsync();
     }
 
     public async Task CreateUser(User user)
@@ -53,5 +60,26 @@ public class UserRepository :  IUserRepository
         return _context.Users.FirstOrDefaultAsync(x => x.Id == id).Result.RegionId;
     }
 
-    public async Task<int> CountPerformersAsync() => await _context.Users.CountAsync();
+    public async Task<int> CountPerformersAsync(int regionId, string searchString)
+    {
+        return await _context.Users
+            .Where(u => u.RegionId == regionId)
+            .Where(u => u.RoleId == 2)
+            .Where(u => EF.Functions.ILike(u.FullName!, $"%{searchString}%"))
+            .AsNoTracking()
+            .CountAsync();
+    } 
+    public IQueryable<User> Query()
+    {
+        return _context.Users.AsNoTracking();
+    }
+
+    public async Task<List<User>> GetDropDownUsers(IQueryable<User> query, string searchString)
+    {
+        return await query
+            .Where(u => EF.Functions.ILike(u.FullName!, $"%{searchString}%"))
+            .OrderBy(u => u.UpdatedAt)
+            .Take(20)
+            .ToListAsync();
+    }
 }

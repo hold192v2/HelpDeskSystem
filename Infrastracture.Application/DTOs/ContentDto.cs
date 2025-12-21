@@ -5,5 +5,8 @@ public record ContentDto(
     string Name,
     string Surname,
     string Patronymic,
+    string SystemId,
+    string Email,
+    double Rating,
     List<string> Category,
     List<string> Office);

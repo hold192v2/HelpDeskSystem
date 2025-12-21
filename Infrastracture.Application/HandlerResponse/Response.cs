@@ -12,7 +12,10 @@ public class Response
     public PerformersDTO? Performers { get; set; }
     public List<OfficeDTO>? Offices { get; set; }
     public List<UserDTO>? Users { get; set; }
-    public List<RegionDTO>? Regions { get; set; }
+    public List<RegionDto>? Regions { get; set; }
+    
+    public List<DropDownUserDto> DropDownUsers { get; set; }
+    public List<FilialDto> Filials { get; set; }
 
     public Response(string message, int status)
     {
@@ -55,10 +58,22 @@ public class Response
         Users = request;
     }
 
-    public Response(string message, int status, List<RegionDTO> request)
+    public Response(string message, int status, List<RegionDto> request)
     {
         Message = message;
         Status = status;
         Regions = request;
+    }
+    public Response(string message, int status, List<DropDownUserDto> request)
+    {
+        Message = message;
+        Status = status;
+        DropDownUsers = request;
+    }
+    public Response(string message, int status, List<FilialDto> request)
+    {
+        Message = message;
+        Status = status;
+        Filials = request;
     }
 }

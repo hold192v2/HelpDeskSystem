@@ -7,24 +7,24 @@ namespace DTOs;
 
 public class RegisterConsumer : IConsumer<RegisterIntoInfrastructureDto>
 {
-    private readonly IUserRepository _userRepositoryRepository;
-    private readonly IRoleRepository _roleRepositoryRepository;
+    private readonly IUserRepository _userRepository;
+    private readonly IRoleRepository _roleRepository;
     private readonly IMapper _mapper;
     private readonly IUnitOfWork _unitOfWork;
-    private readonly IOfficeRepository _officeRepositoryRepository;
+    private readonly IOfficeRepository _officeRepository;
 
-    public RegisterConsumer(IUserRepository userRepositoryRepository, IMapper mapper, IRoleRepository roleRepositoryRepository,  IUnitOfWork unitOfWork, IOfficeRepository officeRepositoryRepository)
+    public RegisterConsumer(IUserRepository userRepository, IMapper mapper, IRoleRepository roleRepository,  IUnitOfWork unitOfWork, IOfficeRepository officeRepository)
     {
-        _userRepositoryRepository = userRepositoryRepository;
+        _userRepository = userRepository;
         _mapper = mapper;
-        _roleRepositoryRepository = roleRepositoryRepository;
+        _roleRepository = roleRepository;
         _unitOfWork = unitOfWork;
-        _officeRepositoryRepository = officeRepositoryRepository;
+        _officeRepository = officeRepository;
         
     }
     public async Task Consume(ConsumeContext<RegisterIntoInfrastructureDto> context)
     {
-        var office = await _officeRepositoryRepository.GetOfficeByIdAsync(context.Message.OfficeId);
+        var office = await _officeRepository.GetOfficeByIdAsync(context.Message.OfficeId);
         var user = _mapper.Map<User>(context.Message, opt =>
         {
             opt.Items["Office"] = office;
@@ -32,10 +32,10 @@ public class RegisterConsumer : IConsumer<RegisterIntoInfrastructureDto>
             opt.Items["UpdatedAt"] = DateTime.UtcNow;
         });
         
-        if (user != null && !(await _userRepositoryRepository.IsExist(user.Id)))
+        if (user != null && !(await _userRepository.IsExist(user.Id)))
         {
-            var role = await _roleRepositoryRepository.GetRoleNameById(user.RoleId);
-            await _userRepositoryRepository.CreateUser(user!);
+            var role = await _roleRepository.GetRoleNameById(user.RoleId);
+            await _userRepository.CreateUser(user!);
             await context.RespondAsync(_mapper.Map<UserCheckAuthDto>(user, opt =>
             {
                 opt.Items["roleName"] = role;

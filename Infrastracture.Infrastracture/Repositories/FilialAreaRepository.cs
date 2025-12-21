@@ -1,5 +1,7 @@
+using Infrastracture.Domain.Entities;
 using Infrastracture.Domain.Interfaces;
 using Infrastracture.Infrastracture.Context;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infrastracture.Infrastracture.Repositories;
 
@@ -14,6 +16,11 @@ public class FilialAreaRepository : IFilialAreaRepository
 
     public async Task<string> GetFilialName(int filialId)
     {
-        return _context.FilialAreas.FirstOrDefault(x => x.Id == filialId).Name;
+        return (await _context.FilialAreas.FirstOrDefaultAsync(x => x.Id == filialId)).Name;
+    }
+
+    public async Task<List<FilialArea>> GetAllFilials()
+    {
+        return await _context.FilialAreas.ToListAsync();
     }
 }

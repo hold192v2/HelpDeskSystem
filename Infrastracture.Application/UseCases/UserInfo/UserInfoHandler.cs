@@ -9,24 +9,24 @@ namespace Infrastracture.Application.UseCases.UserInfo;
 
 public class UserInfoHandler: IRequestHandler<UserInfoRequest, Response>
 {
-    private readonly IUserRepository _userRepositoryRepository;
-    private readonly IRoleRepository _roleRepositoryRepository;
+    private readonly IUserRepository _userRepository;
+    private readonly IRoleRepository _roleRepository;
     private readonly IMapper _mapper;
-    private readonly IRegionRepository _regionRepositoryRepository;
-    public UserInfoHandler(IUserRepository userRepositoryRepository, IRoleRepository roleRepositoryRepository, IMapper mapper,  IRegionRepository regionRepositoryRepository) 
+    private readonly IRegionRepository _regionRepository;
+    public UserInfoHandler(IUserRepository userRepository, IRoleRepository roleRepository, IMapper mapper,  IRegionRepository regionRepository) 
     {
-        _userRepositoryRepository = userRepositoryRepository;
-        _roleRepositoryRepository = roleRepositoryRepository;
+        _userRepository = userRepository;
+        _roleRepository = roleRepository;
         _mapper = mapper;
-        _regionRepositoryRepository = regionRepositoryRepository;
+        _regionRepository = regionRepository;
     }
     
     public async Task<Response> Handle(UserInfoRequest request, CancellationToken cancellationToken)
     {
         
-        var user = await _userRepositoryRepository.GetUserByUserId(request.UserId);
-        var role = await _roleRepositoryRepository.GetRoleByUser(user);
-        var region = await _regionRepositoryRepository.GetRegionIdByUserId(request.UserId);
+        var user = await _userRepository.GetUserByUserId(request.UserId);
+        var role = await _roleRepository.GetRoleByUser(user);
+        var region = await _regionRepository.GetRegionIdByUserId(request.UserId);
         
         var userInfo = _mapper.Map<UserInfoDTO>(user, opt => opt.Items["Region"] = region);
         userInfo.RoleName = role.Name;

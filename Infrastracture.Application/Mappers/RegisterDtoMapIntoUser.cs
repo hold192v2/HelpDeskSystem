@@ -16,6 +16,6 @@ public class RegisterDtoMapIntoUser : Profile
             .ForMember(user => user.UpdatedAt,
                 opt => opt.MapFrom((src, dto, _, context) => context.Items["UpdatedAt"]))
             .ForMember(user => user.FullName,
-                opt => opt.MapFrom(dto => $"{dto.Surname} {dto.Name} {dto.Patronymic}"));
+                opt => opt.MapFrom(dto => $"{dto.Surname} {dto.Name} {dto.Patronymic}".Trim().ToLower()));
     }
 }

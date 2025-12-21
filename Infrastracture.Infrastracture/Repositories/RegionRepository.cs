@@ -16,7 +16,7 @@ public class RegionRepository :  IRegionRepository
 
     public async Task<List<Region>> GetAllRegions()
     {
-        return await _context.Set<Region>().ToListAsync();
+        return await _context.Regions.ToListAsync();
     }
 
     public async Task<List<Region>> GetRegionsByFilialId(int filialId)

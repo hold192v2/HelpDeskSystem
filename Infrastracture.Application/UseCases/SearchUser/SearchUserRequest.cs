@@ -3,4 +3,4 @@ using MediatR;
 
 namespace Infrastracture.Application.UseCases.SearchUser;
 
-public record SearchUserRequest(string Fullname, Guid? UserId): IRequest<Response>;
+public record SearchUserRequest(Guid? UserId, string? Role, int? RegionId, int? FilialId, string? Search = ""): IRequest<Response>;

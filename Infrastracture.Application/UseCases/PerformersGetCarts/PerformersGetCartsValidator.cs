@@ -1,6 +1,6 @@
 namespace Infrastracture.Application.UseCases.Performers;
 
-public class PerformersValidator
+public class PerformersGetCartsValidator
 {
     
 }
