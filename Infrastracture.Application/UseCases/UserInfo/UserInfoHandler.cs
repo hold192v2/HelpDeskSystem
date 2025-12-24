@@ -26,7 +26,8 @@ public class UserInfoHandler: IRequestHandler<UserInfoRequest, Response>
         
         var user = await _userRepository.GetUserByUserId(request.UserId);
         var role = await _roleRepository.GetRoleByUser(user);
-        var region = await _regionRepository.GetRegionIdByUserId(request.UserId);
+        var regionId = await _userRepository.GetUserRegionId(request.UserId);
+        var region = await _regionRepository.GetRegionByRegionId(regionId);
         
         var userInfo = _mapper.Map<UserInfoDTO>(user, opt => opt.Items["Region"] = region);
         userInfo.RoleName = role.Name;

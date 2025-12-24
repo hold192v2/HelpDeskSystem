@@ -16,7 +16,7 @@ public class RegionRepository :  IRegionRepository
 
     public async Task<List<Region>> GetAllRegions()
     {
-        return await _context.Regions.ToListAsync();
+        return await _context.Regions.OrderBy(reg => reg.Id).ToListAsync();
     }
 
     public async Task<List<Region>> GetRegionsByFilialId(int filialId)
@@ -32,5 +32,16 @@ public class RegionRepository :  IRegionRepository
     public async Task<int> GetRegionIdByUserId(Guid userId)
     {
          return _context.Regions.FirstOrDefaultAsync(x => x.AdminId == userId).Id;
+    }
+
+    public Task<Region> GetRegionByUserId(Guid userId)
+    {
+        throw new NotImplementedException();
+    }
+
+    public async Task UpdateAdminIdAsync(Guid adminId, int  regionId)
+    {
+        var targetRegion = await _context.Regions.FirstOrDefaultAsync(x => x.Id == regionId);
+        if (targetRegion != null) targetRegion.AdminId = adminId;
     }
 }

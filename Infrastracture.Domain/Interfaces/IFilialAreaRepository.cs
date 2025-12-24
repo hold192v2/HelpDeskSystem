@@ -5,5 +5,7 @@ namespace Infrastracture.Domain.Interfaces;
 public interface IFilialAreaRepository
 {
     Task<string> GetFilialName(int filialId);
-    public Task<List<FilialArea>> GetAllFilials();
+    Task<List<FilialArea>> GetAllFilials();
+    Task<FilialArea> GetFilialByFilialId(int filialId);
+    Task UpdateAnalystId(Guid userId, int filialId);
 }

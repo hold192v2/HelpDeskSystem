@@ -8,4 +8,5 @@ public interface IOfficeRepository
     Task AddOfficeAsync(string city, string address, int regionId);
     Task EditOfficeAsync(Guid officeId, string city, string adress);
     Task<List<Office>> GetOfficesByRegionIdAsync(int regionId);
+    Task<List<Office>> GetOfficesByIdsAsync(IEnumerable<Guid> ids);
 }

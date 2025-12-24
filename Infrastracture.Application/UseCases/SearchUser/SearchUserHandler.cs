@@ -37,7 +37,7 @@ public class SearchUserHandler: IRequestHandler<SearchUserRequest, Response>
                .ToList();
         }
         else if (request.RegionId.HasValue) regionsId.Add(request.RegionId.Value);
-        else return new Response("Incorrect request", 404);
+        else return new Response("Incorrect request, you must specify the region or filial ID", 404);
         if (request.Role == null) return new Response("Incorrect request, role is not specified.", 404);
         var specification = Resolve(request.Role,  regionsId);
         var baseQuery = _userRepository.Query();

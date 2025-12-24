@@ -34,7 +34,6 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         o.TokenValidationParameters = new TokenValidationParameters
         {
             ValidIssuer = builder.Configuration["Authentication:ValidIssuer"],
-            RoleClaimType = "realm_access.roles"
         };
         o.BackchannelHttpHandler = new HttpClientHandler
         {
@@ -71,6 +70,7 @@ builder.Services.AddMassTransit(x =>
 {
     x.AddConsumer<AuthCheckConsumer>();
     x.AddConsumer<RegisterConsumer>();
+    x.AddRequestClient<ChangeRoleRequestDto>();
 
     x.UsingRabbitMq((context, cfg) =>
     {
@@ -85,6 +85,7 @@ builder.Services.AddMassTransit(x =>
             x.ConfigureConsumer<RegisterConsumer>(context);
             x.Bind("exchange-register-name");
         });
+        cfg.Message<ChangeRoleRequestDto>(x => x.SetEntityName("change-role-queue"));
 
     });
 

@@ -45,4 +45,9 @@ public class OfficeRepository: IOfficeRepository
     {
         return _context.Offices.Where(x => x.RegionId == regionId).ToList();
     }
+
+    public async Task<List<Office>> GetOfficesByIdsAsync(IEnumerable<Guid> ids)
+    {
+        return await _context.Offices.Where(o => ids.Contains(o.Id)).ToListAsync();
+    }
 }
