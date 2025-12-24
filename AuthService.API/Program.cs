@@ -1,5 +1,6 @@
 using System.Net;
 using System.Security.Claims;
+using AuthService.API.RabbitMq;
 using DTOs;
 using Keycloak.AuthServices.Authentication;
 using Keycloak.AuthServices.Authorization;
@@ -55,6 +56,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 builder.Services.AddMassTransit(x =>
 {
+    x.AddConsumer<ChangeRoleConsumer>();
+    
     x.AddRequestClient<UserCheckAuthRequestDto>();
     x.AddRequestClient<RegisterIntoInfrastructureDto>();
 
@@ -63,6 +66,11 @@ builder.Services.AddMassTransit(x =>
         cfg.Host("amqps://ryqfbrei:ZzSKvw_5rVinY_QLFwQ3evnA2EJgogn4@kebnekaise.lmq.cloudamqp.com/ryqfbrei");
         cfg.Message<UserCheckAuthRequestDto>(x => x.SetEntityName("check-auth-queue"));
         cfg.Message<RegisterIntoInfrastructureDto>(x => x.SetEntityName("register-queue"));
+        cfg.ReceiveEndpoint("change-role-queue", x =>
+        {
+            x.ConfigureConsumer<ChangeRoleConsumer>(context);
+            x.Bind("change-role-name");
+        });
     });
 });
 
