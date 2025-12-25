@@ -20,7 +20,7 @@ public class CategoriesHandler: IRequestHandler<CategoriesRequest, Response>
         
         var pageIndex = request.page;
         var totalRecords = categories.Count;
-        var totalPages = (int)MathF.Ceiling(categories.Count / 20);
+        var totalPages = (int)Math.Round((double)totalRecords / 20, MidpointRounding.ToPositiveInfinity);
         var pagination = new PaginationDto(pageIndex, totalRecords, totalPages);
 
         var contents = categories
@@ -28,6 +28,12 @@ public class CategoriesHandler: IRequestHandler<CategoriesRequest, Response>
             new ContentDto(category.Id, category.Name, category.Description, category.BasePeriodSla)
             ).ToList();
         
-        return new Response("Categories", 200, new CategoriesDto(contents, pagination));
+        var content = new List<ContentDto>();
+        if ((pageIndex - 1) * 20 + 20 > totalRecords)
+            content = contents.Slice((pageIndex - 1) * 20, totalRecords - (pageIndex - 1) * 20);
+        else
+            content = contents.Slice((pageIndex - 1) * 20, 20);
+        
+        return new Response("Categories", 200, new CategoriesDto(content, pagination));
     }
 }

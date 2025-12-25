@@ -24,7 +24,7 @@ public class CategoryRepository: ICategoryRepository
         return await _context.Categories.FirstOrDefaultAsync(x => x.Id == id);
     }
 
-    public async void AddCategory(string name, int sla)
+    public async Task AddCategory(string name, int sla)
     {
         var category = new Category();
         category.Name = name;
@@ -32,10 +32,11 @@ public class CategoryRepository: ICategoryRepository
         await _context.Categories.AddAsync(category);
     }
 
-    public async void UpdateCategory(Guid id, string name, int sla)
+    public async Task UpdateCategory(Guid id, string name, int sla)
     {
-        var category = await GetCategoryById(id);
+        var category = await _context.Categories.FirstOrDefaultAsync(x => x.Id == id);;
         category.Name = name;
         category.BasePeriodSla = sla;
+        await _context.SaveChangesAsync();
     }
 }

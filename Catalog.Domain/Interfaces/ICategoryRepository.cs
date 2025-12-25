@@ -6,6 +6,6 @@ public interface ICategoryRepository
 {
     Task<List<Category>> GetAllCategories();
     Task<Category> GetCategoryById(Guid id);
-    void AddCategory(string name, int sla);
-    void UpdateCategory(Guid id, string name, int sla);
+    Task AddCategory(string name, int sla);
+    Task UpdateCategory(Guid id, string name, int sla);
 }
