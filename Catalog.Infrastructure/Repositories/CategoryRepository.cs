@@ -24,19 +24,20 @@ public class CategoryRepository: ICategoryRepository
         return await _context.Categories.FirstOrDefaultAsync(x => x.Id == id);
     }
 
-    public async Task AddCategory(string name, int sla)
+    public async Task AddCategory(string name, string description, int sla)
     {
         var category = new Category();
         category.Name = name;
+        category.Description = description;
         category.BasePeriodSla = sla;
         await _context.Categories.AddAsync(category);
     }
 
-    public async Task UpdateCategory(Guid id, string name, int sla)
+    public async Task UpdateCategory(Guid id, string name, string description, int sla)
     {
-        var category = await _context.Categories.FirstOrDefaultAsync(x => x.Id == id);;
+        var category = _context.Categories.FirstOrDefaultAsync(x => x.Id == id).Result;
         category.Name = name;
+        category.Description = description;
         category.BasePeriodSla = sla;
-        await _context.SaveChangesAsync();
     }
 }

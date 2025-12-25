@@ -17,5 +17,6 @@ public static class ServiseExtentions
         serviceCollection.AddScoped<ICategoryRepository, CategoryRepository>();
         serviceCollection.AddScoped<IPriorityRepository, PriorityRepository>();
         serviceCollection.AddScoped<IStatusRepository, StatusRepository>();
+        serviceCollection.AddScoped<IUnitOfWork, UnitOfWork>();
     }
 }

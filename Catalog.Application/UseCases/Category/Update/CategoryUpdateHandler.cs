@@ -7,15 +7,18 @@ namespace Catalog.Application.UseCases.Category.Update;
 public class CategoryUpdateHandler: IRequestHandler<CategoryUpdateRequest, Response>
 {
     private readonly ICategoryRepository _categoryRepository;
+    private readonly IUnitOfWork _unitOfWork;
 
-    public CategoryUpdateHandler(ICategoryRepository categoryRepository)
+    public CategoryUpdateHandler(ICategoryRepository categoryRepository, IUnitOfWork unitOfWork)
     {
         _categoryRepository = categoryRepository;
+        _unitOfWork = unitOfWork;
     }
     
     public async Task<Response> Handle(CategoryUpdateRequest request, CancellationToken cancellationToken)
     {
-        _categoryRepository.UpdateCategory(request.Id, request.Name, request.Sla);
+        _categoryRepository.UpdateCategory(request.Id, request.Name, request.Description, request.Sla);
+        await _unitOfWork.Commit(cancellationToken);
         return new Response("Category updated", 200);
     }
 }
