@@ -16,10 +16,10 @@ public class PrioritiesHandler: IRequestHandler<PrioritiesRequest, Response>
     
     public async Task<Response> Handle(PrioritiesRequest request, CancellationToken cancellationToken)
     {
-        var priorities = _priorityRepository.GetAllPriorities().Result;
+        var priorities = await _priorityRepository.GetAllPriorities();
         var result = priorities
             .Select(priority => 
-                new PriorityDto(priority.Id, priority.Name, priority.slaFactor)
+                new PriorityDto(priority.Id, priority.Name, priority.SlaFactor)
             ).ToList();
         
         return new Response("Priorities", 200, result);

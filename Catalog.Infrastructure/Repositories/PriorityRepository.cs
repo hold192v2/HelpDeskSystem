@@ -23,6 +23,6 @@ public class PriorityRepository: IPriorityRepository
     {
         var priority = _context.Priorities.FirstOrDefaultAsync(x => x.Id == id).Result;
         priority.Name = name;
-        priority.slaFactor = sla;
+        priority.SlaFactor = sla;
     }
 }

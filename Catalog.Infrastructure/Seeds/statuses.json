@@ -1,0 +1,38 @@
+[
+  {
+    "id" : 1,
+    "code" : "pending",
+    "name" : "На рассмотрении",
+    "isFinal": false
+  },
+  {
+    "id" : 2,
+    "code" : "assigned",
+    "name" : "В работе",
+    "isFinal": false
+  },
+  {
+    "id" : 3,
+    "code" : "in_progress",
+    "name" : "Назначен исполнителем",
+    "isFinal": false
+  },
+  {
+    "id" : 4,
+    "code" : "outsourcedПередано внешнему подрядчику",
+    "name" : "Передано внешнему подрядчику",
+    "isFinal": false
+  },
+  {
+    "id" : 5,
+    "code" : "completed",
+    "name" : "Выполнена",
+    "isFinal": true
+  },
+  {
+    "id" : 6,
+    "code" : "rejected",
+    "name" : "Отклонена",
+    "isFinal": true
+  }
+]

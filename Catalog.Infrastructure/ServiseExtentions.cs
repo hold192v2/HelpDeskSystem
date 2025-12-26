@@ -1,6 +1,7 @@
 using Catalog.Domain.Interfaces;
 using Catalog.Infrastructure.Context;
 using Catalog.Infrastructure.Repositories;
+using Catalog.Infrastructure.Seeds.Extentions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,5 +19,6 @@ public static class ServiseExtentions
         serviceCollection.AddScoped<IPriorityRepository, PriorityRepository>();
         serviceCollection.AddScoped<IStatusRepository, StatusRepository>();
         serviceCollection.AddScoped<IUnitOfWork, UnitOfWork>();
+        serviceCollection.AddScoped<SeedInitializer>();
     }
 }

@@ -2,6 +2,7 @@ using System.Security.Claims;
 using System.Text.Json;
 using Catalog.Application.Configuration;
 using Catalog.Infrastructure;
+using Catalog.Infrastructure.Seeds.Extentions;
 using DTOs;
 using Keycloak.AuthServices.Authorization;
 using MassTransit;
@@ -93,6 +94,12 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 var app = builder.Build();
 
 app.MapControllers();
+
+using (var scope = app.Services.CreateScope())
+{
+    var initializer = scope.ServiceProvider.GetRequiredService<SeedInitializer>();
+    await initializer.Initialize();
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

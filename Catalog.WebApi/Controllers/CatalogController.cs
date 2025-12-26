@@ -20,17 +20,17 @@ public class CatalogController: ControllerBase
         _mediator = mediator;
     }
 
-    [HttpGet("getCategories")]
+    [HttpGet("categories")]
     public async Task<IActionResult> GetCategories([FromQuery] CategoriesRequest request)
     {
         var response = await _mediator.Send(request);
         return Ok(response.Categories);
     }
     
-    [HttpGet("specificCategory")]
-    public async Task<IActionResult> SpecificCategory([FromQuery] SpecificCategoryRequest request)
+    [HttpGet("category/{id}")]
+    public async Task<IActionResult> SpecificCategory([FromQuery] Guid id)
     {
-        var response = await _mediator.Send(request);
+        var response = await _mediator.Send(new SpecificCategoryRequest(id));
         return Ok(response.SpecificCategory);
     }
 

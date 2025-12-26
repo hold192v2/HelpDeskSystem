@@ -1,0 +1,22 @@
+[
+  {
+    "id" : 1,
+    "name" : "low",
+    "sla-factor" : 1.0
+  },
+  {
+    "id" : 2,
+    "name" : "medium",
+    "sla-factor" : 0.7
+  },
+  {
+    "id" : 3,
+    "name" : "high",
+    "sla-factor" : 0.5
+  },
+  {
+    "id" : 4,
+    "name" : "express",
+    "sla-factor" : 0.3
+  }
+]
