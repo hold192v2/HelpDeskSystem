@@ -10,15 +10,15 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TicketAPI", "TicketAPI\Tick
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Domain", "Domain", "{25163A20-32D2-44C1-B436-F480B0FA28F4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ticket.Domain", "Ticket.Domain\Ticket.Domain.csproj", "{B5AE487E-23F6-4D9F-AABD-D64F49C5A658}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TicketService.Domain", "TicketService.Domain\TicketService.Domain.csproj", "{B5AE487E-23F6-4D9F-AABD-D64F49C5A658}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{4A899B36-900D-4DD9-813C-504F0782B17A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ticket.Infrastructure", "Ticket.Infrastructure\Ticket.Infrastructure.csproj", "{79718C50-8223-4447-95DC-F410B04D248D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TicketService.Infrastructure", "TicketService.Infrastructure\TicketService.Infrastructure.csproj", "{79718C50-8223-4447-95DC-F410B04D248D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Application", "Application", "{8E87B1A8-D408-482B-AFE4-FAA39F14C19C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ticket.Application", "Ticket.Application\Ticket.Application.csproj", "{25AB94D2-96D8-4E38-B771-026691E65386}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TicketService.Application", "TicketService.Application\TicketService.Application.csproj", "{25AB94D2-96D8-4E38-B771-026691E65386}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

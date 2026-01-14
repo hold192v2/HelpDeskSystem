@@ -3,6 +3,7 @@ using System.Text.Json;
 using Keycloak.AuthServices.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using TicketService.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,7 +14,7 @@ builder.Services.AddOpenApi();
 builder.Services.AddControllers();
 builder.Services.AddSwaggerGen();
 
-
+builder.Services.ConfigurePresistanceApp(builder.Configuration);
 
 builder.Services
     .AddAuthorization()
