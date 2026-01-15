@@ -1,15 +1,14 @@
-using MediatR;
 using TicketService.Application.Extentions;
-using TicketService.Application.HandlerResponse;
 
-namespace TicketService.Application.UseCases.TicketPanel;
+namespace TicketService.Application.DTOs;
 
-public record TicketPanelRequest(
+public record TicketPanelUsabilityDto(
     int Page = 1,
     int? PriorityId = null,
     int? StatusId  = null,
     SortDirection SortByDate = SortDirection.Desc,
     string? Theme = "",
     string Role = "",
-    Guid UserId = default
-    ) : IRequest<Response>;
+    Guid UserId = default,
+    List<Guid> OfficeIds = null!
+);

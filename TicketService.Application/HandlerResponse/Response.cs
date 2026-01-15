@@ -6,7 +6,7 @@ public class Response
 {
     public string Message { get;  }
     public int Status { get; }
-    public GetTicketPanelDto GetTicketPanelDto { get; }
+    public GetTicketPanelDto GetTicketPanelDto { get; set; }
     
     
     public Response(string message, int status)

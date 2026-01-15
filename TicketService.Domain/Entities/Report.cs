@@ -7,5 +7,5 @@ public class Report
     public string Message { get; set; } = "";
     public string Photo { get; set; } = "";
     public double Total { get; set; }
-    public DateTime CreatedAt { get; set; }
+    public DateTimeOffset CreatedAt { get; set; }
 }

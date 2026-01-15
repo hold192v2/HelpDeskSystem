@@ -7,5 +7,5 @@ public class TicketStatusChangeLog
     public int FromStatusId { get; set; }
     public int ToStatusId { get; set; }
     public Guid ChangedByUserId { get; set; }
-    public DateTime ChangedAt { get; set; }
+    public DateTimeOffset ChangedAt { get; set; }
 }

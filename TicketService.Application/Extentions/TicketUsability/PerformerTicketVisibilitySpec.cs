@@ -1,3 +1,5 @@
+using TicketService.Application.DTOs;
+using TicketService.Application.Extentions.ExtentionMethods;
 using TicketService.Application.Extentions.Interfaces;
 using TicketService.Application.UseCases.TicketPanel;
 using TicketService.Domain.Entities;
@@ -6,8 +8,21 @@ namespace TicketService.Application.Extentions.TicketUsability;
 
 public class PerformerTicketVisibilitySpec : ITicketRoleVisibilitySpecification
 {
-    public IQueryable<Ticket> Apply(IQueryable<Ticket> query, TicketPanelRequest ticketContext)
+    public IQueryable<Ticket> Apply(IQueryable<Ticket> query, TicketPanelUsabilityDto ticketContext)
     {
-        throw new NotImplementedException();
+        var now = DateTime.UtcNow;
+        return query.Where(ticket => ticket.PerformerId == ticketContext.UserId)
+            .OrderBy(t =>
+                t.StatusId == (int)StatusEnum.Completed ||
+                t.StatusId == (int)StatusEnum.Rejected
+                    ? 0
+                    : t.DueAt < now
+                        ? 1
+                        : (t.DueAt - now) <= TimeSpan.FromHours(24)
+                            ? 2
+                            : 3
+            )
+            .ThenBy(t => t.DueAt)
+            .ThenByDescending(ticket => ticket.PriorityId);
     }
 }

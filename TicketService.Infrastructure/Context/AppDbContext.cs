@@ -11,6 +11,10 @@ public class AppDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(GetType().Assembly);
+        modelBuilder.Entity<Ticket>()
+            .HasDiscriminator<string>("Discriminator")
+            .HasValue<Ticket>("ticket")            
+            .HasValue<CrossingTicket>("crossing");    
     }
     public DbSet<CrossingTicket> CrossingTickets { get; set; }
     public DbSet<Feedback> Feedbacks { get; set; }

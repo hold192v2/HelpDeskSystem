@@ -30,17 +30,19 @@ public class TicketController: ControllerBase
         var userId = new Guid(claims.GetValueOrDefault("user-id")!);
         var roles = JsonConvert.DeserializeObject<RoleContainer>(claims.GetValueOrDefault("realm_access")).Roles;
         var mainRole = roles.FirstOrDefault(r => r == "admin" || r == "employee" || r == "performer");
-        var request = _mapper.Map<TicketPanelRequest>(requestDto, opt =>
-        {
-            opt.Items["roleName"] = mainRole;
-            opt.Items["userId"] = userId;
-        });
+        var request = new TicketPanelRequest(requestDto.Page, 
+            requestDto.PriorityId, 
+            requestDto.StatusId, 
+            requestDto.SortByDate, 
+            requestDto.Theme, 
+            mainRole!, 
+            userId); 
         
         var response = await _mediator.Send(request);
-        return Ok(response);
+        return Ok(response.GetTicketPanelDto);
     }
 
-    [Authorize]
+    [Authorize(Roles = "employee")]
     [HttpPost("creation")]
     public async Task<IActionResult> CreateTicket()
     {

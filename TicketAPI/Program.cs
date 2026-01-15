@@ -1,8 +1,12 @@
 using System.Security.Claims;
 using System.Text.Json;
 using Keycloak.AuthServices.Authorization;
+using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using TicketService.Application.Configuration;
+using TicketService.Application.DTOs;
+using TicketService.Application.Mappers;
 using TicketService.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,7 +19,7 @@ builder.Services.AddControllers();
 builder.Services.AddSwaggerGen();
 
 builder.Services.ConfigurePresistanceApp(builder.Configuration);
-
+builder.Services.ConfigureApplicationApp();
 builder.Services
     .AddAuthorization()
     .AddKeycloakAuthorization()
@@ -56,6 +60,20 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
+builder.Services.AddMassTransit(x =>
+{
+    x.AddRequestClient<AdminOfficesGetRequestDto>();
+    x.AddRequestClient<OfficeNameGetRequestDto>();
+    x.AddRequestClient<CatalogTicketPanelRequestDto>();
+    x.UsingRabbitMq((context, cfg) =>
+    {
+        cfg.Host("amqps://ryqfbrei:ZzSKvw_5rVinY_QLFwQ3evnA2EJgogn4@kebnekaise.lmq.cloudamqp.com/ryqfbrei");
+        cfg.Message<AdminOfficesGetRequestDto>(x => x.SetEntityName("admin-offices-queue"));
+        cfg.Message<OfficeNameGetRequestDto>(x => x.SetEntityName("ticket-name-offices-queue"));
+        cfg.Message<CatalogTicketPanelRequestDto>(x => x.SetEntityName("catalog-ticket-panel-queue"));
+    });
+
+});
 
 var app = builder.Build();
 
