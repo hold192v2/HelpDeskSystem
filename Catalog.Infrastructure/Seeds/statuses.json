@@ -19,7 +19,7 @@
   },
   {
     "id" : 4,
-    "code" : "outsourcedПередано внешнему подрядчику",
+    "code" : "outsourced",
     "name" : "Передано внешнему подрядчику",
     "isFinal": false
   },

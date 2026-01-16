@@ -17,7 +17,8 @@ public class PriorityUpdateHandler: IRequestHandler<PriorityUpdateRequest, Respo
     
     public async Task<Response> Handle(PriorityUpdateRequest request, CancellationToken cancellationToken)
     {
-        _priorityRepository.UpdatePriority(request.Id, request.Name, request.Sla);
+        
+        await _priorityRepository.UpdatePriority(request.UpdatePriorities);
         await _unitOfWork.Commit(cancellationToken);
         return new Response("Priority Updated", 200);
     }

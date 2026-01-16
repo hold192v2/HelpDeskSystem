@@ -1,6 +1,7 @@
 using System.Security.Claims;
 using System.Text.Json;
 using Catalog.Application.Configuration;
+using Catalog.Application.RabbitMq;
 using Catalog.Infrastructure;
 using Catalog.Infrastructure.Seeds.Extentions;
 using DTOs;
@@ -68,28 +69,38 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
-// builder.Services.AddMassTransit(x =>
-// {
-//     x.AddConsumer<AuthCheckConsumer>();
-//     x.AddConsumer<RegisterConsumer>();
-//
-//     x.UsingRabbitMq((context, cfg) =>
-//     {
-//         cfg.Host("amqps://ryqfbrei:ZzSKvw_5rVinY_QLFwQ3evnA2EJgogn4@kebnekaise.lmq.cloudamqp.com/ryqfbrei");
-//         cfg.ReceiveEndpoint("check-auth-queue", x =>
-//         {
-//             x.ConfigureConsumer<AuthCheckConsumer>(context);
-//             x.Bind("exchange-name");
-//         });
-//         cfg.ReceiveEndpoint("register-queue", x =>
-//         {
-//             x.ConfigureConsumer<RegisterConsumer>(context);
-//             x.Bind("exchange-register-name");
-//         });
-//
-//     });
-//
-// });
+builder.Services.AddMassTransit(x =>
+{
+    x.AddConsumer<CatalogInfoConsumer>();
+    x.AddConsumer<CatalogTicketPanelConsumer>();
+    x.AddConsumer<CreationTicketCatalogConsumer>();  
+    x.AddConsumer<TicketInfoCatalogConsumer>();
+    
+    x.UsingRabbitMq((context, cfg) =>
+    {
+        cfg.Host("amqps://ryqfbrei:ZzSKvw_5rVinY_QLFwQ3evnA2EJgogn4@kebnekaise.lmq.cloudamqp.com/ryqfbrei");
+        cfg.ReceiveEndpoint("catalog-info-queue", x =>
+        {
+            x.ConfigureConsumer<CatalogInfoConsumer>(context);
+            x.Bind("exchange-catalog-name");
+        });
+        cfg.ReceiveEndpoint("catalog-ticket-panel-queue", x =>
+        {
+            x.ConfigureConsumer<CatalogTicketPanelConsumer>(context);
+            x.Bind("catalog-ticket-panel-name");
+        });
+        cfg.ReceiveEndpoint("catalog-ticket-creation-queue", x =>
+        {
+            x.ConfigureConsumer<CreationTicketCatalogConsumer>(context);
+            x.Bind("catalog-ticket-creation-name");
+        });
+        cfg.ReceiveEndpoint("ticket-catalog-info-queue", x =>
+        {
+            x.ConfigureConsumer<TicketInfoCatalogConsumer>(context);
+            x.Bind("ticket-catalog-info-name");
+        });
+    });
+});
 
 var app = builder.Build();
 

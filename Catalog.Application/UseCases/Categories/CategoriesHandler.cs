@@ -16,11 +16,11 @@ public class CategoriesHandler: IRequestHandler<CategoriesRequest, Response>
     
     public async Task<Response> Handle(CategoriesRequest request, CancellationToken cancellationToken)
     {
-        var categories = _categoryRepository.GetAllCategories().Result;
+        var categories = await _categoryRepository.GetAllCategories();
         
-        var pageIndex = request.page;
+        var pageIndex = request.Page;
         var totalRecords = categories.Count;
-        var totalPages = (int)Math.Round((double)totalRecords / 20, MidpointRounding.ToPositiveInfinity);
+        var totalPages = (totalRecords + 19) / 20;
         var pagination = new PaginationDto(pageIndex, totalRecords, totalPages);
 
         var contents = categories

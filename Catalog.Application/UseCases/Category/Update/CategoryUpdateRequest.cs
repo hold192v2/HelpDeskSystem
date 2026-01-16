@@ -4,7 +4,7 @@ using MediatR;
 namespace Catalog.Application.UseCases.Category.Update;
 
 public record CategoryUpdateRequest(
-    Guid Id,
+    Guid CategoryId,
     string Name,
     string Description,
     int Sla): IRequest<Response>;

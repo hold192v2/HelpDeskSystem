@@ -16,7 +16,7 @@ public class SpecificCategoryHandler: IRequestHandler<SpecificCategoryRequest, R
     
     public async Task<Response> Handle(SpecificCategoryRequest request, CancellationToken cancellationToken)
     {
-        var category = _categoryRepository.GetCategoryById(request.Id).Result;
+        var category = await _categoryRepository.GetCategoryById(request.Id);
         return new Response("Specific Category", 200, new SpecificCategoryDto(category.Id, category.Name, category.Description, category.BasePeriodSla));
     }
 }

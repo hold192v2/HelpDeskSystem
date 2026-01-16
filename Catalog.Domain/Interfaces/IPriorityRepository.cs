@@ -1,3 +1,4 @@
+using Catalog.Domain.Dtos;
 using Catalog.Domain.Entities;
 
 namespace Catalog.Domain.Interfaces;
@@ -5,5 +6,8 @@ namespace Catalog.Domain.Interfaces;
 public interface IPriorityRepository
 {
     Task<List<Priority>> GetAllPriorities();
-    void UpdatePriority(int id, string name, double sla);
+    Task UpdatePriority(List<PriorityUpdateDto> request);
+    Task<List<string>> GetPriorityNamesByIds(List<int> ids);
+    Task<Priority> GetPriorityById(int id);
+    Task<string> GetPriorityNameById(int id);
 }

@@ -17,7 +17,7 @@ public class CategoryUpdateHandler: IRequestHandler<CategoryUpdateRequest, Respo
     
     public async Task<Response> Handle(CategoryUpdateRequest request, CancellationToken cancellationToken)
     {
-        _categoryRepository.UpdateCategory(request.Id, request.Name, request.Description, request.Sla);
+        await _categoryRepository.UpdateCategory(request.CategoryId, request.Name, request.Description, request.Sla);
         await _unitOfWork.Commit(cancellationToken);
         return new Response("Category updated", 200);
     }

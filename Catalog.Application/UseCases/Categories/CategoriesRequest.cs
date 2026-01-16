@@ -4,4 +4,4 @@ using MediatR;
 namespace Catalog.Application.UseCases.Categories;
 
 public record CategoriesRequest(
-    int page) : IRequest<Response>;
+    int Page) : IRequest<Response>;

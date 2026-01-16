@@ -1,6 +1,7 @@
 namespace Catalog.Domain.Interfaces;
 
-public class IStatusRepository
+public interface IStatusRepository
 {
-    
+    Task<List<string>> GetStatusNamesByIds(List<int> ids);
+    Task<string> GetStatusNameById(int id);
 }
