@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using TicketService.Application.Extentions;
 using TicketService.Domain.Entities;
 using TicketService.Domain.Interfaces;
 using TicketService.Infrastructure.Context;
@@ -13,9 +14,9 @@ public class TicketRepository : ITicketRepository
     {
         _context = appDbContext;
     }
-    public Task Create(Ticket ticket)
+    public async Task Create(Ticket ticket)
     {
-        throw new NotImplementedException();
+        await _context.Tickets.AddAsync(ticket);
     }
 
     public async Task<List<Ticket>> GetTicketsForPanelWithSearch(IQueryable<Ticket> query, int page, int pageSize, int? priorityId, int? statusId,
@@ -47,5 +48,37 @@ public class TicketRepository : ITicketRepository
     public IQueryable<Ticket> Query()
     {
         return _context.Tickets.AsNoTracking();
+    }
+
+    public async Task<Dictionary<int, List<Guid>>> PerformerTicketCount(List<Guid> performerIds)
+    {
+        var countsByPerformer = await _context.Tickets
+            .AsNoTracking()
+            .Where(t => performerIds.Contains(t.PerformerId))
+            .Where(t => t.StatusId != (int)StatusEnum.Completed
+                        && t.StatusId != (int)StatusEnum.Rejected)
+            .GroupBy(t => t.PerformerId)
+            .Select(g => new
+            {
+                PerformerId = g.Key,
+                Count = g.Count()
+            })
+            .ToListAsync();
+        
+        var countMap = countsByPerformer
+            .ToDictionary(x => x.PerformerId, x => x.Count);
+        foreach (var performerId in performerIds)
+        {
+            if (!countMap.ContainsKey(performerId))
+                countMap[performerId] = 0;
+        }
+        var result = countMap
+            .GroupBy(x => x.Value) 
+            .ToDictionary(
+                g => g.Key,
+                g => g.Select(x => x.Key).ToList()
+            );
+
+        return result;
     }
 }

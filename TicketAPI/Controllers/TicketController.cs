@@ -1,9 +1,11 @@
 using AutoMapper;
+using MassTransit.SagaStateMachine;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using TicketService.Application.DTOs;
+using TicketService.Application.UseCases.TicketCreation;
 using TicketService.Application.UseCases.TicketPanel;
 
 namespace TicketAPI.Controllers;
@@ -44,8 +46,16 @@ public class TicketController: ControllerBase
 
     [Authorize(Roles = "employee")]
     [HttpPost("creation")]
-    public async Task<IActionResult> CreateTicket()
+    public async Task<IActionResult> CreateTicket([FromBody] CreateQueryDto requestBody)
     {
+        var claims = User.Claims
+            .GroupBy(c => c.Type)
+            .ToDictionary(g => g.Key, g => g.First().Value);
+        var userId = new Guid(claims.GetValueOrDefault("user-id")!);
+        var request = new TicketCreationRequest(requestBody, userId);
+        var response = await _mediator.Send(request);
+        if (response.Status != 200)
+            BadRequest(response.Message);
         return Ok();
     }
     

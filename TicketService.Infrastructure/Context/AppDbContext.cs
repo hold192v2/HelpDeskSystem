@@ -23,6 +23,7 @@ public class AppDbContext : DbContext
     public DbSet<TicketComment> TicketComments { get; set; }
     public DbSet<TicketPauseLog> TicketPauseLogs { get; set; }
     public DbSet<TicketStatusChangeLog> TicketStatusChangeLogs { get; set; }
+    public DbSet<PhotoConnection> PhotoConnections { get; set; }
 }
 
 public class YourDbContextFactory : IDesignTimeDbContextFactory<AppDbContext>

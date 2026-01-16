@@ -25,14 +25,10 @@ public class TicketPanelHandler : IRequestHandler<TicketPanelRequest, Response>
     public async Task<Response> Handle(TicketPanelRequest request, CancellationToken cancellationToken)
     {
         var searchString = request.Theme!.ToLower().Trim();
-        AdminOfficesGetDto offices;
-        if (request.Role == "admin")
-        {
-            var response = await _adminOfficesClient.GetResponse<AdminOfficesGetDto>(
-                new AdminOfficesGetRequestDto(request.UserId));
-            offices = response.Message;
-        }
-        else offices = new AdminOfficesGetDto(new List<Guid>());
+        AdminOfficesGetDto offices = request.Role == "admin"
+            ? (await _adminOfficesClient.GetResponse<AdminOfficesGetDto>(
+                new AdminOfficesGetRequestDto(request.UserId))).Message
+            : new AdminOfficesGetDto(new List<Guid>());
         
         var specification = Resolve(request.Role,  offices.OfficeIds);
         var baseQuery = _ticketRepository.Query();

@@ -20,6 +20,7 @@ public static class ServiceExtentions
         serviceCollection.AddScoped<ITicketRepository, TicketRepository>();
         serviceCollection.AddScoped<ITicketPauseLogRepository, TicketPauseLogRepository>();
         serviceCollection.AddScoped<ITicketStatusChangeLogRepository, TicketStatusChangeLogRepository>();
+        serviceCollection.AddScoped<IPhotoConnectionRepository, PhotoConnectionRepository>();
         serviceCollection.AddScoped<IUnitOfWork, UnitOfWork>();
     }
 }

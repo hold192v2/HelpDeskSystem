@@ -8,6 +8,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\TicketService.Application\TicketService.Application.csproj" />
       <ProjectReference Include="..\TicketService.Domain\TicketService.Domain.csproj" />
     </ItemGroup>
 

@@ -1,6 +1,10 @@
 namespace TicketService.Application.DTOs;
 
-public class CreateQueryDto
-{
-    
-}
+public record CreateQueryDto(
+    string Theme, 
+    string Description, 
+    List<string> PhotosUrl, 
+    Guid OfficeId, 
+    int PriorityId,
+    Guid CategoryId, 
+    string Location);

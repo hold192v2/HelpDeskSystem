@@ -65,12 +65,17 @@ builder.Services.AddMassTransit(x =>
     x.AddRequestClient<AdminOfficesGetRequestDto>();
     x.AddRequestClient<OfficeNameGetRequestDto>();
     x.AddRequestClient<CatalogTicketPanelRequestDto>();
+    x.AddRequestClient<CreationTicketCatalogRequestDto>();
+    x.AddRequestClient<CreateTicketPerformersIdsGetRequestDto>();
+    
     x.UsingRabbitMq((context, cfg) =>
     {
         cfg.Host("amqps://ryqfbrei:ZzSKvw_5rVinY_QLFwQ3evnA2EJgogn4@kebnekaise.lmq.cloudamqp.com/ryqfbrei");
         cfg.Message<AdminOfficesGetRequestDto>(x => x.SetEntityName("admin-offices-queue"));
         cfg.Message<OfficeNameGetRequestDto>(x => x.SetEntityName("ticket-name-offices-queue"));
         cfg.Message<CatalogTicketPanelRequestDto>(x => x.SetEntityName("catalog-ticket-panel-queue"));
+        cfg.Message<CreationTicketCatalogRequestDto>(x => x.SetEntityName("catalog-ticket-creation-queue"));
+        cfg.Message<CreateTicketPerformersIdsGetRequestDto>(x => x.SetEntityName("performers-ticket-creation-queue"));
     });
 
 });
@@ -83,6 +88,10 @@ if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
     app.UseSwagger();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.yaml", "v1");
+    });
 }
 
 app.UseAuthentication();
