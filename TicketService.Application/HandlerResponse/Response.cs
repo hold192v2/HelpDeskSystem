@@ -7,6 +7,7 @@ public class Response
     public string Message { get;  }
     public int Status { get; }
     public GetTicketPanelDto GetTicketPanelDto { get; set; }
+    public TicketInfoDto  TicketInfoDto { get; set; }
     
     
     public Response(string message, int status)
@@ -19,5 +20,11 @@ public class Response
         Message = message;
         Status = status;
         GetTicketPanelDto = getTicketPanelDto;
+    }
+    public Response(string message, int status,  TicketInfoDto ticketInfoDto)
+    {
+        Message = message;
+        Status = status;
+        TicketInfoDto = ticketInfoDto;
     }
 }

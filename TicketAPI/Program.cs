@@ -67,6 +67,8 @@ builder.Services.AddMassTransit(x =>
     x.AddRequestClient<CatalogTicketPanelRequestDto>();
     x.AddRequestClient<CreationTicketCatalogRequestDto>();
     x.AddRequestClient<CreateTicketPerformersIdsGetRequestDto>();
+    x.AddRequestClient<TicketIntoInfrastructureRequestDto>();
+    x.AddRequestClient<TicketInfoCatalogRequestDto>();
     
     x.UsingRabbitMq((context, cfg) =>
     {
@@ -76,6 +78,8 @@ builder.Services.AddMassTransit(x =>
         cfg.Message<CatalogTicketPanelRequestDto>(x => x.SetEntityName("catalog-ticket-panel-queue"));
         cfg.Message<CreationTicketCatalogRequestDto>(x => x.SetEntityName("catalog-ticket-creation-queue"));
         cfg.Message<CreateTicketPerformersIdsGetRequestDto>(x => x.SetEntityName("performers-ticket-creation-queue"));
+        cfg.Message<TicketIntoInfrastructureRequestDto>(x => x.SetEntityName("ticket-infrastructure-info-queue"));
+        cfg.Message<TicketInfoCatalogRequestDto>(x => x.SetEntityName("ticket-catalog-info-queue"));
     });
 
 });

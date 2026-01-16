@@ -1,6 +1,6 @@
+using MediatR;
+using TicketService.Application.HandlerResponse;
+
 namespace TicketService.Application.UseCases.TicketComments;
 
-public class TicketCommentsRequest
-{
-    
-}
+public record TicketCommentsRequest(Guid TicketId) : IRequest<Response>;

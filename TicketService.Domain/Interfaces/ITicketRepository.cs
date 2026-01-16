@@ -9,4 +9,5 @@ public interface ITicketRepository
     Task<int> CountAsync(IQueryable<Ticket> query, int? priorityId, int? statusId, int? dateSort, string theme);
     IQueryable<Ticket> Query();
     Task<Dictionary<int, List<Guid>>> PerformerTicketCount(List<Guid> performerIds);
+    Task<Ticket> GetTicketById(Guid ticketId);
 }

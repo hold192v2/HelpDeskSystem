@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using TicketService.Application.DTOs;
 using TicketService.Application.UseCases.TicketCreation;
+using TicketService.Application.UseCases.TicketInfo;
 using TicketService.Application.UseCases.TicketPanel;
 
 namespace TicketAPI.Controllers;
@@ -60,10 +61,12 @@ public class TicketController: ControllerBase
     }
     
     [Authorize]
-    [HttpGet("{id}")]
-    public async Task<IActionResult> GetTicketInfo()
+    [HttpGet("{id:guid}")]
+    public async Task<IActionResult> GetTicketInfo(Guid id)
     {
-        return Ok();
+        var request = new TicketInfoRequest(id);
+        var response = await _mediator.Send(request);
+        return Ok(response.TicketInfoDto);
     }
     
     [Authorize]

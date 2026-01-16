@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using TicketService.Domain.Entities;
 using TicketService.Domain.Interfaces;
 using TicketService.Infrastructure.Context;
@@ -15,5 +16,10 @@ public class PhotoConnectionRepository :  IPhotoConnectionRepository
     public async Task CreateAsync(List<PhotoConnection> photoConnections)
     {
         await _appDbContext.PhotoConnections.AddRangeAsync(photoConnections);
+    }
+
+    public async Task<List<PhotoConnection>> GetByTicketIdAsync(Guid ticketId)
+    {
+        return await _appDbContext.PhotoConnections.Where(photo => photo.TicketId == ticketId).ToListAsync();
     }
 }

@@ -81,4 +81,9 @@ public class TicketRepository : ITicketRepository
 
         return result;
     }
+
+    public async Task<Ticket> GetTicketById(Guid ticketId)
+    {
+        return await _context.Tickets.FirstOrDefaultAsync(ticket => ticket.Id == ticketId);
+    }
 }
