@@ -21,19 +21,45 @@ public class UserRepository :  IUserRepository
             .FirstOrDefaultAsync(x => x.Id == id);
     }
 
-    public async Task<List<User>> GetPerformersWithSearchByRegionId(int regionId, int page, int pageSize, string searchString)
+    public async Task<List<User>> GetPerformersWithSearchByRegionId(int regionId, int page, int pageSize, string searchString, List<Guid?> categories)
     {
         var baseQuery = _context.Users
             .Where(u => u.RegionId == regionId)
             .Where(u => u.RoleId == 2)
             .Where(u => EF.Functions.ILike(u.FullName!, $"%{searchString}%"))
             .AsNoTracking();
-
+        if (categories.Any())
+        {
+            baseQuery = baseQuery.Where(u =>
+                _context.CategoryUsers.Any(cu =>
+                    cu.UserId == u.Id && categories.Contains(cu.CategoryId)
+                )
+            );
+        }
         var users = await baseQuery
             .OrderBy(u => u.UpdatedAt)
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
             .Include(u => u.Offices)
+            .ToListAsync();
+
+        return users;
+    }
+
+    public async Task<List<User>> GetPerformersByOfficeId(Guid officeId, Guid category)
+    {
+        var baseQuery = _context.Users
+            .Where(u => u.RoleId == 2)
+            .AsNoTracking()
+            .Where(u =>
+                _context.CategoryUsers.Any(cu =>
+                    cu.UserId == u.Id && category == cu.CategoryId
+                    
+                )
+            );
+        var users = await baseQuery
+            .OrderBy(u => u.UpdatedAt)
+            .Where(user => user.Offices.Select(office => office.Id).Contains(officeId))
             .ToListAsync();
 
         return users;
@@ -81,5 +107,11 @@ public class UserRepository :  IUserRepository
             .OrderBy(u => u.UpdatedAt)
             .Take(20)
             .ToListAsync();
+    }
+
+    public async Task<string> GetUserName(Guid id)
+    {
+        var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == id);
+        return $"{user!.Surname} {user.Name[0]}.{user.Patronymic[0]}.";
     }
 }

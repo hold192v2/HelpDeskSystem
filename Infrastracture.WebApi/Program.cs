@@ -1,5 +1,6 @@
 using System.Security.Claims;
 using System.Text.Json;
+using Catalog.Application.DTOs;
 using DTOs;
 using Infrastracture.Application.Configuration;
 using Infrastracture.Application.DTOs;
@@ -9,6 +10,7 @@ using Keycloak.AuthServices.Authorization;
 using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using TicketService.Application.DTOs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -70,7 +72,13 @@ builder.Services.AddMassTransit(x =>
 {
     x.AddConsumer<AuthCheckConsumer>();
     x.AddConsumer<RegisterConsumer>();
+    x.AddConsumer<AdminOfficesGetConsumer>();
+    x.AddConsumer<NameOfficesConsumer>();
+    x.AddConsumer<CreateTicketPerformersConsumer>();
+    x.AddConsumer<TicketInfoConsumer>();
+    
     x.AddRequestClient<ChangeRoleRequestDto>();
+    x.AddRequestClient<CatalogInfoRequestDto>();
 
     x.UsingRabbitMq((context, cfg) =>
     {
@@ -85,7 +93,29 @@ builder.Services.AddMassTransit(x =>
             x.ConfigureConsumer<RegisterConsumer>(context);
             x.Bind("exchange-register-name");
         });
+        cfg.ReceiveEndpoint("admin-offices-queue", x =>
+        {
+            x.ConfigureConsumer<AdminOfficesGetConsumer>(context);
+            x.Bind("exchange-admin-offices-name");
+        });
+        cfg.ReceiveEndpoint("ticket-name-offices-queue", x =>
+        {
+            x.ConfigureConsumer<NameOfficesConsumer>(context);
+            x.Bind("ticket-name-exchange-name");
+        });
+        cfg.ReceiveEndpoint("performers-ticket-creation-queue", x =>
+        {
+            x.ConfigureConsumer<CreateTicketPerformersConsumer>(context);
+            x.Bind("performers-ticket-creation-name");
+        });
+        cfg.ReceiveEndpoint("ticket-infrastructure-info-queue", x =>
+        {
+            x.ConfigureConsumer<TicketInfoConsumer>(context);
+            x.Bind("ticket-infrastructure-info-name");
+        });
+        
         cfg.Message<ChangeRoleRequestDto>(x => x.SetEntityName("change-role-queue"));
+        cfg.Message<CatalogInfoRequestDto>(x => x.SetEntityName("catalog-info-queue"));
 
     });
 

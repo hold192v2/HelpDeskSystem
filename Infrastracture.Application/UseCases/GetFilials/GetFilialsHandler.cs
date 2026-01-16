@@ -21,18 +21,7 @@ public class GetFilialsHandler : IRequestHandler<GetFilialsRequest, Response>
 
     public async Task<Response> Handle(GetFilialsRequest request, CancellationToken cancellationToken)
     {
-        var regions = await _filialRepository.GetAllFilials();
-        var resultTaskDto = regions.Select( async region =>
-        {
-            if (region.AnaliticId != null)
-            {
-                var user = await _userRepository.GetUserByUserId(region.AnaliticId.Value);
-                return new FilialDto(region.Id, region.Name, user.Surname, user.Name, user.Patronymic);
-            }
-
-            return new FilialDto(region.Id, region.Name, null, null, null);
-        }).ToList();
-        var resultDto = await Task.WhenAll(resultTaskDto);
-        return new Response("Regions", 200, resultDto.ToList());
+        var filials = await _filialRepository.GetFilialsWithAnalystAsync();
+        return new Response("Regions", 200, filials.ToList());
     }
 }

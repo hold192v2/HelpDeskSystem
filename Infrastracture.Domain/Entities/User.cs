@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace Infrastracture.Domain.Entities;
 
 public class User
@@ -10,7 +12,8 @@ public class User
     public string Email { get; set; }
     public string Avatar { get; set; } = "";
     public int RoleId { get; set; }
-    public int? CategoryId { get; set; }
+    [NotMapped]
+    public List<string> CategoryNames { get; set; } = new();
     public ICollection<Office> Offices { get; set; } = new List<Office>();
     public int RegionId { get; set; }
     public double? Rating { get; set; }

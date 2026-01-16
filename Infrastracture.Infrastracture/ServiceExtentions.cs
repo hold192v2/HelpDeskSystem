@@ -20,6 +20,7 @@ public static class ServiceExtentions
         serviceCollection.AddScoped<IRegionRepository, RegionRepository>();
         serviceCollection.AddScoped<IRoleRepository, RoleRepository>();
         serviceCollection.AddScoped<IUserRepository, UserRepository>();
+        serviceCollection.AddScoped<ICategoryUserRepository, CategoryUserRepository>();
         serviceCollection.AddScoped<IUnitOfWork, UnitOfWork>();
         serviceCollection.AddScoped<SeedInitializer>();
     }

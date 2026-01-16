@@ -22,7 +22,7 @@ using Newtonsoft.Json;
 
 namespace Infrastracture.WebApi.Controllers;
 [ApiController]
-[Microsoft.AspNetCore.Mvc.Route("user")]
+[Route("user")]
 public class UserController: ControllerBase
 {
     private readonly IMediator _mediator;
@@ -80,14 +80,6 @@ public class UserController: ControllerBase
     [HttpPatch("createNewOffice")]
     public async Task<IActionResult> CreateNewOfficePatch([FromBody] CreateNewOfficePatchRequest request)
     {
-        var claims = User.Claims
-            .GroupBy(c => c.Type)
-            .ToDictionary(g => g.Key, g => g.First().Value);
-        var userId = new Guid(claims.GetValueOrDefault("user-id")!);
-        
-        var trueRole = new List<string> { "admin", "superadmin" };
-        if (!TrueRole(userId, trueRole))
-            return BadRequest();
         var response = await _mediator.Send(request);
         if (response is null)
             return BadRequest();
@@ -115,7 +107,7 @@ public class UserController: ControllerBase
             .GroupBy(c => c.Type)
             .ToDictionary(g => g.Key, g => g.First().Value);
         var userId = new Guid(claims.GetValueOrDefault("user-id")!);
-        query = query with { UserId = userId };
+        query.UserId = userId;
         var response = await _mediator.Send(query);
         return Ok(response.Performers);
     }
@@ -182,17 +174,11 @@ public class UserController: ControllerBase
     }
     [Authorize]
     [HttpGet("filials/with-analyst")]
-    public async Task<IActionResult> GetFilialsWithAdmins()
+    public async Task<IActionResult> GetFilialsWithAnalyst()
     {
         var request = new GetFilialsRequest();
         var response = await _mediator.Send(request);
         return Ok(response.Filials);
     }
-    //сделать эндпоинты, которые выдают просто регионы и филиалы
-    private bool TrueRole(Guid userId, List<string> trueRoles)
-    {
-        var user = _userRepository.GetUserByUserId(userId).Result;
-        var role = _roleRepository.GetRoleByUser(user).Result;
-        return trueRoles.Contains(role.Name);
-    }
+
 }

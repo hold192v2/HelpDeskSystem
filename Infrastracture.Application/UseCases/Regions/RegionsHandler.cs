@@ -21,18 +21,8 @@ public class RegionsHandler: IRequestHandler<RegionsRequest, Response>
     
     public async Task<Response> Handle(RegionsRequest request, CancellationToken cancellationToken)
     {
-        var regions = await _regionRepository.GetAllRegions();
-        var resultTaskDto = regions.Select( async region =>
-        {
-            if (region.AdminId != null)
-            {
-                var user = await _userRepository.GetUserByUserId(region.AdminId.Value);
-                return new RegionDto(region.Id, region.Name, user.Surname, user.Name, user.Patronymic);
-            }
+        var regions = await _regionRepository.GetRegionsWithAnalystAsync();
 
-            return new RegionDto(region.Id, region.Name, null, null, null);
-        }).ToList();
-        var resultDto = await Task.WhenAll(resultTaskDto);
-        return new Response("Regions", 200, resultDto.ToList());
+        return new Response("Regions", 200, regions);
     }
 }

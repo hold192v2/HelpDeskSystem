@@ -1,5 +1,8 @@
 using Infrastracture.Application.DTOs;
+using Infrastracture.Domain.Dtos;
 using Infrastracture.Application.UseCases.UserInfo;
+using FilialDto = Infrastracture.Domain.Dtos.FilialDto;
+using RegionDto = Infrastracture.Domain.Dtos.RegionDto;
 
 namespace Infrastracture.Application.HandlerResponse;
 

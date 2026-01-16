@@ -1,7 +1,9 @@
 using Infrastracture.Domain.Entities;
 using Infrastracture.Domain.Interfaces;
 using Infrastracture.Infrastracture.Context;
+using MassTransit.Initializers;
 using Microsoft.EntityFrameworkCore;
+using TicketService.Application.DTOs;
 
 namespace Infrastracture.Infrastracture.Repositories;
 
@@ -46,8 +48,26 @@ public class OfficeRepository: IOfficeRepository
         return _context.Offices.Where(x => x.RegionId == regionId).ToList();
     }
 
+    public async Task<List<Guid>> GetOfficesIdsByRegionIdAsync(int regionId)
+    {
+        return await _context.Offices.Where(x => x.RegionId == regionId).Select(office => office.Id).ToListAsync();
+    }
+
     public async Task<List<Office>> GetOfficesByIdsAsync(IEnumerable<Guid> ids)
     {
         return await _context.Offices.Where(o => ids.Contains(o.Id)).ToListAsync();
+    }
+
+    public async Task<List<OfficeNameDto>> GetOfficesNamesByIdAsync(List<Guid> officeIds)
+    {
+        return await _context.Offices.Where(o => officeIds.Contains(o.Id))
+            .Select(office => new OfficeNameDto(office.Id, $"{office.City}, {office.Address}"))
+            .ToListAsync();
+    }
+    
+    public async Task<string> GetOfficeNameByIdAsync(Guid officeId)
+    {
+        var office = await _context.Offices.FirstOrDefaultAsync(o => o.Id == officeId);
+        return $"{office!.City}, {office.Address}";
     }
 }

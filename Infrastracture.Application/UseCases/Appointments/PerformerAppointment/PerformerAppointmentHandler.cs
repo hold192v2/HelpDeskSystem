@@ -12,13 +12,15 @@ public class PerformerAppointmentHandler : IRequestHandler<PerformerAppointmentR
     private readonly IUserRepository _userRepository;
     private readonly IOfficeRepository _officeRepository;
     private readonly IUnitOfWork _unitOfWork;
+    private readonly ICategoryUserRepository _categoryUserRepository;
 
-    public PerformerAppointmentHandler(IRequestClient<ChangeRoleRequestDto> requestClient,  IUserRepository userRepository,  IOfficeRepository officeRepository, IUnitOfWork unitOfWork)
+    public PerformerAppointmentHandler(IRequestClient<ChangeRoleRequestDto> requestClient,  IUserRepository userRepository,  IOfficeRepository officeRepository, IUnitOfWork unitOfWork, ICategoryUserRepository categoryUserRepository)
     {
         _requestClient = requestClient;
         _userRepository = userRepository;
         _officeRepository = officeRepository;
         _unitOfWork = unitOfWork;
+        _categoryUserRepository =  categoryUserRepository;
     }
     public async Task<Response> Handle(PerformerAppointmentRequest request, CancellationToken cancellationToken)
     {
@@ -33,7 +35,7 @@ public class PerformerAppointmentHandler : IRequestHandler<PerformerAppointmentR
             var offices = await _officeRepository.GetOfficesByIdsAsync(request.OfficesIds);
             var user = await _userRepository.GetUserByUserId(request.UserId);
             user.RoleId = 2;
-            user.CategoryId = request.CategoryIds.FirstOrDefault();
+            await _categoryUserRepository.SaveRelationAsync(user.Id, request.CategoryIds);
             foreach (var item in offices)
             {
                 if (user.Offices.All(x => x.Id != item.Id))
